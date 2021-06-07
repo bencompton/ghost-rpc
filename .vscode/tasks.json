@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build API",
+			"type": "shell",
+			"command": "npm run build --prefix ./examples/react-app-with-api/api/",
+			"group": "build",
+			"presentation": {
+			  "reveal": "always",
+			  "panel": "new"
+			}
+		}		
+	]
+}
