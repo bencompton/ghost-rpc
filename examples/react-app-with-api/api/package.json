@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@types/node": "^15.12.0",
+    "ghost-rpc": "1.0.1",
     "fastify": "^3.6.0",
     "fastify-vite": "^2.1.3"
   }

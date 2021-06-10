@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+      "target": "ES5",
+      "declaration": true,
+      "module": "CommonJS",
+      "sourceMap": true,
+      "moduleResolution": "Node",
+      "outDir": "dist",
+      "strict": true,
+      "rootDir": ".",
+      "lib": ["esnext", "DOM"]
+  },
+  "exclude": [
+      "node_modules",
+      "dist",
+      "examples"
+  ]
+}
