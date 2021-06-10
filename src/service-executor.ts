@@ -4,6 +4,8 @@ export type ServiceExecutionResultStatus =
   'serviceNotFound'
   | 'methodNotFound'
   | 'executionFailed'
+  | 'notAuthenticated'
+  | 'notAuthorized'
   | 'success';
 
 export interface IServiceExecutionResult {
