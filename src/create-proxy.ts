@@ -33,7 +33,13 @@ const createServiceProxy = (
         let globalParams: any = null;
 
         if (globalParamsRequestHook) {
-          globalParams = globalParamsRequestHook();
+          const globalParamsRequestHookResult = globalParamsRequestHook();
+
+          if ((globalParamsRequestHookResult as PromiseLike<any>).then) {
+            globalParams = await globalParamsRequestHookResult;
+          } else {
+            globalParams = globalParamsRequestHookResult;
+          }          
         }
 
         const executionResult = await transportHandler(serviceName, methodName, args, globalParams);

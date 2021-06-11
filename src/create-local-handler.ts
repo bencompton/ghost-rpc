@@ -1,9 +1,9 @@
 import { ServicesFactory } from '.';
 import { ProxyTransportHandler } from './create-proxy';
-import serviceExecutor, { IServiceExecutionResult, WrappedPreRequestHook } from './service-executor';
+import serviceExecutor, { WrappedPreRequestHook, PreRequestHookResult } from './service-executor';
 
 export type LocalHandlerPreRequestHook<ConstructionParams, GlobalParamsType> =
-  (globalParams: GlobalParamsType | null) => IServiceExecutionResult | ConstructionParams;
+  (globalParams: GlobalParamsType | null) => PreRequestHookResult<ConstructionParams>;
 
 export default <ConstructionParams, GlobalParams>(
   servicesFactory: ServicesFactory,

@@ -1,5 +1,4 @@
 import { ServicesFactory } from '.';
-import { GlobalParamsRequestHook } from './create-proxy';
 
 export type ServiceExecutionResultStatus =
   'serviceNotFound'
@@ -15,8 +14,11 @@ export interface IServiceExecutionResult {
   result?: any;
 }
 
+export type PreRequestHookResult<ConstructionParamsType> = 
+  IServiceExecutionResult | ConstructionParamsType | Promise<IServiceExecutionResult | ConstructionParamsType>;
+
 export type WrappedPreRequestHook<ConstructionParamsType> =
-  (globalParams: any) => IServiceExecutionResult | ConstructionParamsType;
+  (globalParams: any) => PreRequestHookResult<ConstructionParamsType>;
 
 export default async <ConstructionParams>(
   servicesFactory: ServicesFactory,
@@ -26,11 +28,15 @@ export default async <ConstructionParams>(
   globalParams: any,
   wrappedPreRequestHook?: WrappedPreRequestHook<ConstructionParams> | null
 ): Promise<IServiceExecutionResult> => {
-  let constructionParams: unknown;
-  let preRequestHookResult: ConstructionParams | IServiceExecutionResult | null = null;
+  let constructionParams: ConstructionParams;
+  let preRequestHookResult: PreRequestHookResult<ConstructionParams> | null = null;
 
   if (wrappedPreRequestHook) {
     preRequestHookResult = wrappedPreRequestHook(globalParams);
+
+    if ((preRequestHookResult as PromiseLike<any>).then) {
+      preRequestHookResult = await preRequestHookResult;
+    }
   }
 
   if (

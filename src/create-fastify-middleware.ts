@@ -1,8 +1,8 @@
 import { ServicesFactory } from './';
-import serviceExecutor, { IServiceExecutionResult, WrappedPreRequestHook } from './service-executor';
+import serviceExecutor, { IServiceExecutionResult, PreRequestHookResult, WrappedPreRequestHook } from './service-executor';
 
 export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
-  (request: any, globalParams: any) => IServiceExecutionResult | ConstructionParams;
+  (request: any, globalParams: any) => PreRequestHookResult<ConstructionParams>;
 
 export default <ConstructionParams>(
   basePath: string,
