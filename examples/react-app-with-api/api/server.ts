@@ -1,15 +1,15 @@
 import fastify from 'fastify';
-import * as path from 'path';
 import { createFastifyMiddleware } from '../../../src';
 
-import { services } from '../shared/services/';
+import { servicesFactory } from '../shared/services/';
 
 const start = async () => {
   const server = fastify({
     logger: true
   });
   
-  const ghostRpcMiddleware = createFastifyMiddleware('/api/', services);
+  const ghostRpcMiddleware = createFastifyMiddleware('/api/', servicesFactory);
+
   server.register(ghostRpcMiddleware);
 
   try {

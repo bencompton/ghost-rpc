@@ -1,4 +1,5 @@
-import { BaseServices } from '.';
+import { ServicesFactory } from '.';
+import { GlobalParamsRequestHook } from './create-proxy';
 
 export type ServiceExecutionResultStatus =
   'serviceNotFound'
@@ -14,18 +15,50 @@ export interface IServiceExecutionResult {
   result?: any;
 }
 
-export default async (
-  services: BaseServices,
+export type WrappedPreRequestHook<ConstructionParamsType> =
+  (globalParams: any) => IServiceExecutionResult | ConstructionParamsType;
+
+export default async <ConstructionParams>(
+  servicesFactory: ServicesFactory,
   serviceName: string,
   methodName: string,
-  methodArguments: any[]
+  methodArguments: any[],
+  globalParams: any,
+  wrappedPreRequestHook?: WrappedPreRequestHook<ConstructionParams> | null
 ): Promise<IServiceExecutionResult> => {
-  const service = services[serviceName];
+  let constructionParams: unknown;
+  let preRequestHookResult: ConstructionParams | IServiceExecutionResult | null = null;
+
+  if (wrappedPreRequestHook) {
+    preRequestHookResult = wrappedPreRequestHook(globalParams);
+  }
+
+  if (
+    preRequestHookResult
+    && (preRequestHookResult as IServiceExecutionResult).status
+    && (preRequestHookResult as IServiceExecutionResult).result
+  ) {
+    return preRequestHookResult as IServiceExecutionResult;
+  } else {
+    constructionParams = preRequestHookResult as ConstructionParams;
+  }
+  
+  const serviceFactory = servicesFactory[serviceName];  
+
+  if (!serviceFactory || typeof serviceFactory !== 'function') {
+    return {
+      status: 'serviceNotFound',
+      error: { message: `Services factory provided no instantiator for service type ${serviceName}`, stack: null }
+    };
+  }
+
+  const service = serviceFactory(constructionParams as ConstructionParams);
 
   if (!service) {
     return {
-      status: 'serviceNotFound'
-    };
+      status: 'serviceNotFound',
+      error: { message: `Services factory provided no valid service for ${serviceName}`, stack: null }
+    };    
   } else {
     const method = service[methodName];
     let result: unknown = null;
@@ -33,7 +66,7 @@ export default async (
     if (!method) {
       return {
         status: 'methodNotFound',
-        error: { message: `${serviceName}.${methodName} not found`, stack: null }        
+        error: { message: `${serviceName}.${methodName} not found`, stack: null }
       };
     } else if (typeof method !== 'function') {
       return {

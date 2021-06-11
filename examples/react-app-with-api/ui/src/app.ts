@@ -5,9 +5,9 @@ import { createHttpTransportHandler, createProxy } from '../../../../src';
 import { IAppServices } from '../../shared/services';
 
 const transportHandler = createHttpTransportHandler('./api/');
-const ghostRpcServices = createProxy<IAppServices>(transportHandler);
+const proxy = createProxy<IAppServices>(transportHandler);
 
-const result = await ghostRpcServices.todo.addTodo('test');
+const result = await proxy.todo.addTodo('test');
 
 console.log(result);
 

@@ -1,7 +1,14 @@
-import { BaseServices } from './';
-import serviceExecutor from './service-executor';
+import { ServicesFactory } from './';
+import serviceExecutor, { IServiceExecutionResult, WrappedPreRequestHook } from './service-executor';
 
-export default <T extends BaseServices>(basePath: string, services: T) => {
+export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
+  (request: any, globalParams: any) => IServiceExecutionResult | ConstructionParams;
+
+export default <ConstructionParams>(
+  basePath: string,
+  servicesFactory: ServicesFactory,
+  preRequestHook?: FastifyMiddlewarePreRequestHook<ConstructionParams>
+) => {
   const basePathWithNoTrailingSlash = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
   
   return (fastify: { post: any }, options: any, done: () => void) => {
@@ -13,9 +20,26 @@ export default <T extends BaseServices>(basePath: string, services: T) => {
       const params = request.params;
       const serviceName: string = params.serviceName;
       const methodName: string = params.methodName;
-      const methodArguments: any[] = request.body;
+      const methodArguments: any[] = request.body.arguments;
+      const globalParams: any = request.body.globalParams;
+      let serviceExecutionResult: IServiceExecutionResult;
 
-      const serviceExecutionResult = await serviceExecutor(services, serviceName, methodName, methodArguments);
+      let wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null;
+      
+      if (preRequestHook) {
+        wrappedPreRequestHook = (globalParams: any | null) => {
+          return preRequestHook(request, globalParams);
+        };
+      }
+
+      serviceExecutionResult = await serviceExecutor(
+        servicesFactory,
+        serviceName,
+        methodName,
+        methodArguments,
+        globalParams,
+        wrappedPreRequestHook
+      );
 
       switch (serviceExecutionResult.status) {
         case 'success':

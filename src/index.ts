@@ -3,7 +3,7 @@ import createFastifyMiddleware from './create-fastify-middleware';
 import createHttpTransportHandler from './create-http-transport-handler';
 import createLocalHandler from './create-local-handler';
 
-export type GhostRpcService<Type> = {
+export type ServiceProxy<Type> = {
   [Property in keyof Type]: Type[Property] extends (...args: any[]) => Promise<any> ? 
     Type[Property] :
     (
@@ -13,9 +13,17 @@ export type GhostRpcService<Type> = {
     );
 };
 
-export type GhostRpcServices<Type> = { [Property in keyof Type]: GhostRpcService<Type[Property]> };
+export type ServicesProxy<Type> = { [Property in keyof Type]: ServiceProxy<Type[Property]> };
 
-export type BaseServices = { [serviceName: string]: any };
+export type Class = new (...args: any[]) => any;
+
+export type Services = { [serviceName: string]: any }
+
+export type ServiceFactory<ConstructionParams, Service> = (params: ConstructionParams) => Service;
+
+export type ServicesFactory = { 
+  [serviceName: string]: ServiceFactory<any, any> 
+};
 
 export {
   createProxy,

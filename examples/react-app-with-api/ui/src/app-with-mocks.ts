@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createProxy, createLocalHandler } from '../../../../src';
 
-import { IAppServices, services } from '../../shared/services';
+import { IAppServices, servicesFactory } from '../../shared/services';
 
-const handler = createLocalHandler(services);
+const handler = createLocalHandler(servicesFactory);
 const ghostRpcServices = createProxy<IAppServices>(handler);
 
 const result = await ghostRpcServices.todo.addTodo('test');

@@ -1,9 +1,12 @@
+import { ServicesFactory } from '../../../../src/';
 import TodoService from './todo-service';
 
 export interface IAppServices {
-    todo: TodoService;
+  todo: TodoService;
 }
 
-export const services: IAppServices = {
-    todo: new TodoService()
+export const servicesFactory: ServicesFactory = {
+  todo() {
+    return new TodoService();
+  }
 };
