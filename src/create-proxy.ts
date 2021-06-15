@@ -1,4 +1,5 @@
-import { ServicesProxy } from '.';
+import { onAfterServiceCallCallback, onBeforeServiceCallCallback, ServicesProxy } from '.';
+import { RpcProxyError } from './rpc-proxy-error';
 import { IServiceExecutionResult } from './service-executor';
 
 export type ProxyTransportHandler = (
@@ -8,24 +9,14 @@ export type ProxyTransportHandler = (
   globalParams: any
 ) => Promise<IServiceExecutionResult>;
 
-export type GlobalParamsRequestHook = () => any;
-
-const getError = (executionResult: IServiceExecutionResult) => {
-  let message: string = '';
-
-  if (executionResult.error && executionResult.error.message) {
-    message = executionResult.error.message;
-  } else {
-    message = `Execution resulted in a status of ${executionResult.status}`;
-  }
-
-  return new Error(message);
-};
+export type GlobalParamsRequestHook<GlobalParams> = () => GlobalParams | Promise<GlobalParams>;
 
 const createServiceProxy = (
   transportHandler: ProxyTransportHandler,
   serviceName: string,
-  globalParamsRequestHook?: GlobalParamsRequestHook
+  onBeforeServiceCallCallbacks: onBeforeServiceCallCallback[],
+  onAfterServiceCallCallbacks: onAfterServiceCallCallback[],
+  globalParamsRequestHook?: GlobalParamsRequestHook<any>
 ) => {
   const serviceProxyOptions = {
     get(target: any, methodName: string, reciever: any) {
@@ -42,17 +33,16 @@ const createServiceProxy = (
           }          
         }
 
+        onBeforeServiceCallCallbacks.forEach(callback => callback(serviceName, methodName, args));
+
         const executionResult = await transportHandler(serviceName, methodName, args, globalParams);
 
-        switch (executionResult.status) {
-          case 'success':
-            return executionResult.result;
-          case 'executionFailed':
-            throw getError(executionResult);
-          case 'methodNotFound':
-            throw getError(executionResult);
-          case 'serviceNotFound':
-            throw getError(executionResult);
+        onAfterServiceCallCallbacks.forEach(callback => callback(executionResult));
+
+        if (executionResult.status === 'success') {
+          return executionResult.result;
+        } else {
+          throw new RpcProxyError(executionResult);
         }
       }
     }
@@ -61,16 +51,33 @@ const createServiceProxy = (
   return new Proxy({}, serviceProxyOptions);
 };
 
-const serviceProxies: ServicesProxy<any> = {};
-
 export default <AppServices>(
   transportHandler: ProxyTransportHandler,
-  globalParamsRequestHook?: GlobalParamsRequestHook
+  globalParamsRequestHook?: GlobalParamsRequestHook<any>
 ): ServicesProxy<AppServices> => {
+  const onBeforeServiceCallCallbacks: onBeforeServiceCallCallback[] = [];
+  const onAfterServiceCallCallbacks: onAfterServiceCallCallback[] = [];
+
+  const serviceProxies: ServicesProxy<any> = {
+    onBeforeServiceCall(callback) {
+      onBeforeServiceCallCallbacks.push(callback);
+    },
+  
+    onServiceCallCompleted(callback) {
+      onAfterServiceCallCallbacks.push(callback);
+    }
+  };
+
   const servicesProxyOptions = {
     get(target: any, serviceName: string, receiver: any) {
       if (!serviceProxies[serviceName]) {
-        serviceProxies[serviceName] = createServiceProxy(transportHandler, serviceName, globalParamsRequestHook);
+        serviceProxies[serviceName] = createServiceProxy(
+          transportHandler,
+          serviceName,
+          onBeforeServiceCallCallbacks,
+          onAfterServiceCallCallbacks,
+          globalParamsRequestHook
+        );
       }
 
       return serviceProxies[serviceName];

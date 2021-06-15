@@ -5,7 +5,7 @@ const httpTransportHandler = async <GlobalParams>(
   baseUrl: string,
   serviceName: string,
   methodName: string,
-  methodArgs: any[],
+  methodArguments: any[],
   globalParams: GlobalParams
 ) => {
   const baseUrlWithNoTrailingSlash = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
@@ -18,7 +18,7 @@ const httpTransportHandler = async <GlobalParams>(
     },
 
     body: JSON.stringify({
-      args: methodArgs,
+      methodArguments,
       globalParams
     })
   });
