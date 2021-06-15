@@ -15,8 +15,8 @@ export type ServiceProxy<Type> = {
     );
 };
 
-export type onBeforeServiceCallCallback =  (serviceName: string, methodName: string, methodArguments: any[]) => void;
-export type onAfterServiceCallCallback = (result: IServiceExecutionResult) => void;
+export type onBeforeServiceCallCallback =  (serviceName: string, methodName: string, methodArguments: any[]) => void | Promise<void>;
+export type onAfterServiceCallCallback = (result: IServiceExecutionResult) => void | Promise<void>;
 
 export type ServicesProxy<Type> = {
   [Property in keyof Type]: ServiceProxy<Type[Property]> 

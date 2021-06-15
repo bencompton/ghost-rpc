@@ -33,11 +33,27 @@ const createServiceProxy = (
           }          
         }
 
-        onBeforeServiceCallCallbacks.forEach(callback => callback(serviceName, methodName, args));
+        const beforeServiceCallbackResults = onBeforeServiceCallCallbacks
+          .map(callback => callback(serviceName, methodName, args));
+
+        const beforeServiceCallbackPromises = beforeServiceCallbackResults
+          .filter((result) => (result as PromiseLike<any>).then !== undefined);
+
+        if (beforeServiceCallbackPromises.length) {
+          await Promise.all(beforeServiceCallbackPromises);
+        }
 
         const executionResult = await transportHandler(serviceName, methodName, args, globalParams);
 
-        onAfterServiceCallCallbacks.forEach(callback => callback(executionResult));
+        const afterServiceCallbackResults = onAfterServiceCallCallbacks
+          .map(callback => callback(executionResult));
+
+        const afterServiceCallbackPromises = afterServiceCallbackResults
+          .filter((result) => (result as PromiseLike<any>).then !== undefined);
+
+        if (afterServiceCallbackPromises.length) {
+          await Promise.all(afterServiceCallbackPromises);
+        }
 
         if (executionResult.status === 'success') {
           return executionResult.result;
