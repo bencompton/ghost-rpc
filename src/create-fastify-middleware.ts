@@ -1,4 +1,5 @@
 import { ServicesFactory } from './';
+import { dateReviver, Reviver } from './json-parse-reviver';
 import serviceExecutor, { IServiceExecutionResult, PreRequestHookResult, WrappedPreRequestHook } from './service-executor';
 
 export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
@@ -7,7 +8,9 @@ export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
 export default <ConstructionParams>(
   basePath: string,
   servicesFactory: ServicesFactory,
-  preRequestHook?: FastifyMiddlewarePreRequestHook<ConstructionParams>
+  preRequestHook?: FastifyMiddlewarePreRequestHook<ConstructionParams>,
+  serializer: JSON = JSON,
+  reviver?: Reviver
 ) => {
   const basePathWithNoTrailingSlash = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
   
@@ -20,8 +23,8 @@ export default <ConstructionParams>(
       const params = request.params;
       const serviceName: string = params.serviceName;
       const methodName: string = params.methodName;
-      const methodArguments: any[] = request.body.arguments;
-      const globalParams: any = request.body.globalParams;
+      const methodArguments: any[] = serializer.parse(request.body.arguments, reviver || dateReviver);
+      const globalParams: any = serializer.parse(request.body.globalParams, reviver || dateReviver);
       let serviceExecutionResult: IServiceExecutionResult;
 
       let wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null;
