@@ -2,8 +2,8 @@
   "name": "ghost-rpc-fastify",
   "version": "1.0.0",
   "description": "Fastify middleware for Ghost RPC",
-  "main": "dist/src/index.js",
-  "typings": "dist/src/index.d.ts",
+  "main": "dist/ghost-rpc-fastify/src/index.js",
+  "typings": "dist/ghost-rpc-fastify/src/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
@@ -14,5 +14,8 @@
   },
   "peerDependencies": {
     "fastify": "3.x"
+  },
+  "dependencies": {
+    "@types/node": "^15.12.2"
   }
 }
