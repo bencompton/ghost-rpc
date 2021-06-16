@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createHttpTransportHandler, createProxy } from '../../../../src';
+import { createHttpTransportHandler, createProxy } from '../../../../ghost-rpc/src';
 
 import { IAppServices } from '../../shared/services';
 

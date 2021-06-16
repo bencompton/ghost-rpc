@@ -1,5 +1,5 @@
 import fastify from 'fastify';
-import { createFastifyMiddleware } from '../../../src';
+import { createFastifyMiddleware } from '../../../ghost-rpc-fastify/src/';
 
 import { servicesFactory } from '../shared/services/';
 

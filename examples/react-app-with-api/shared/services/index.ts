@@ -1,4 +1,4 @@
-import { ServicesFactory } from '../../../../src/';
+import { ServicesFactory } from '../../../../ghost-rpc/src/';
 import TodoService from './todo-service';
 
 export interface IAppServices {

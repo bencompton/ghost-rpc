@@ -1,15 +1,18 @@
 {
-  "name": "ghost-rpc",
-  "version": "1.0.3",
-  "description": "",
+  "name": "ghost-rpc-fastify",
+  "version": "1.0.0",
+  "description": "Fastify middleware for Ghost RPC",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
   "author": "Ben Compton",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "devDependencies": {
     "typescript": "^4.3.2"
+  },
+  "peerDependencies": {
+    "fastify": "3.x"
   }
 }

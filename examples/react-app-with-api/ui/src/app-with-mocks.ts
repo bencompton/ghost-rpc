@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createProxy, createLocalHandler } from '../../../../src';
+import { createProxy, createLocalHandler } from '../../../../ghost-rpc/src';
 
 import { IAppServices, servicesFactory } from '../../shared/services';
 
