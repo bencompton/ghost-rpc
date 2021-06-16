@@ -21,7 +21,7 @@ export type WrappedPreRequestHook<ConstructionParams> =
   (globalParams: any) => PreRequestHookResult<ConstructionParams>;
 
 export default async <ConstructionParams>(
-  servicesFactory: ServicesFactory,
+  servicesFactory: ServicesFactory<any, ConstructionParams>,
   serviceName: string,
   methodName: string,
   methodArguments: any[],

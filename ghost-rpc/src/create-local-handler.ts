@@ -6,7 +6,7 @@ export type LocalHandlerPreRequestHook<ConstructionParams, GlobalParamsType> =
   (globalParams: GlobalParamsType | null) => PreRequestHookResult<ConstructionParams>;
 
 export default <ConstructionParams, GlobalParams>(
-  servicesFactory: ServicesFactory,
+  servicesFactory: ServicesFactory<any, ConstructionParams>,
   preRequestHook?: LocalHandlerPreRequestHook<ConstructionParams, GlobalParams>
 ): ProxyTransportHandler => {
   return (

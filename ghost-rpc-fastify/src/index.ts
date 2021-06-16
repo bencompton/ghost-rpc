@@ -10,7 +10,7 @@ export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
 
 export const createFastifyMiddleware = <ConstructionParams>(
   basePath: string,
-  servicesFactory: ServicesFactory,
+  servicesFactory: ServicesFactory<any, ConstructionParams>,
   preRequestHook?: FastifyMiddlewarePreRequestHook<ConstructionParams>,
   serializer: JSON = JSON,
   reviver?: Reviver

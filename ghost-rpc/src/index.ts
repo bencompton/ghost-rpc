@@ -30,8 +30,8 @@ export type Services = { [serviceName: string]: any };
 
 export type ServiceFactory<ConstructionParams, Service> = (params: ConstructionParams) => Service;
 
-export type ServicesFactory = { 
-  [serviceName: string]: ServiceFactory<any, any> 
+export type ServicesFactory<T, ConstructionParams> = { 
+  [ServiceName in keyof T]: ServiceFactory<ConstructionParams, T[ServiceName]> 
 };
 
 export {
