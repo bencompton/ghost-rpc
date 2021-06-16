@@ -2,7 +2,7 @@ import createProxy from './create-proxy';
 import createFastifyMiddleware from './create-fastify-middleware';
 import createHttpTransportHandler from './create-http-transport-handler';
 import createLocalHandler from './create-local-handler';
-import { IServiceExecutionResult } from './service-executor';
+import type { IServiceExecutionResult } from './service-executor';
 import { RpcProxyError } from './rpc-proxy-error';
 
 export type ServiceProxy<Type> = {
