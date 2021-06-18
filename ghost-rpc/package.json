@@ -1,11 +1,14 @@
 {
   "name": "ghost-rpc",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
-  "main": "dist/src/index.js",
-  "typings": "dist/src/index.d.ts",
+  "main": "dist/es5/src/index.js",
+  "module": "dist/esnext/src/index.js",
+  "typings": "dist/es5/src/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build-es5": "tsc --module CommonJS --target es5 --outDir dist/es5/",
+    "build-esnext": "tsc --module ESNext --target esnext --outDir dist/esnext/",
+    "build": "npm run build-es5 && npm run build-esnext"
   },
   "author": "Ben Compton",
   "license": "Apache-2.0",

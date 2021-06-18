@@ -5,14 +5,17 @@
   "main": "dist/src/index.js",
   "scripts": {
     "dev": "tsc && vite",
-    "build": "tsc --incremental",
-    "test": "",
+    "build": "vite build",
+    "test": "jest --colors",
     "start": "npm run build && node dist/examples/react-app-with-api/api/server.js"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.23",
     "@vitejs/plugin-react-refresh": "^1.3.1",
+    "jest": "^26.0.0",
     "jest-cucumber": "^3.0.1",
     "less": "^4.1.1",
+    "ts-jest": "^26.0.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.5"
   },

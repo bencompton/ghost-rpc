@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "types": ["vite/client", "jest"],
     "declaration": true,
-    "module": "ES2020",
+    "module": "ESNext",
     "sourceMap": true,
     "moduleResolution": "Node",
     "emitDecoratorMetadata": true,
