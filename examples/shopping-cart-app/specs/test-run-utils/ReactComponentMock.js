@@ -1,0 +1,1 @@
+//Dummy TSX component for Jest to resolve

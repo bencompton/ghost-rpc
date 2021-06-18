@@ -16,6 +16,7 @@
     "fastify": "3.x"
   },
   "dependencies": {
-    "@types/node": "^15.12.2"
+    "@types/node": "^15.12.2",
+    "fastify": "^3.18.0"
   }
 }
