@@ -11,7 +11,10 @@ export type FastifyMiddlewarePreRequestHookResult<ConstructionParams> =
   }
 
 export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
-  (request: FastifyRequest, globalParams: any) => FastifyMiddlewarePreRequestHookResult<ConstructionParams>
+  (
+    request: FastifyRequest,
+    globalParams: any
+  ) => FastifyMiddlewarePreRequestHookResult<ConstructionParams> | Promise<FastifyMiddlewarePreRequestHookResult<ConstructionParams>>
 
 export const createFastifyMiddleware = <ConstructionParams>(
   basePath: string,
@@ -38,8 +41,12 @@ export const createFastifyMiddleware = <ConstructionParams>(
         let wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null;
         
         if (preRequestHook) {
-          wrappedPreRequestHook = (globalParams: any | null) => {
-            const fastifyPreRequestHookResult = preRequestHook(request, globalParams);
+          wrappedPreRequestHook = async (globalParams: any | null) => {
+            let fastifyPreRequestHookResult = preRequestHook(request, globalParams);
+
+            if ((fastifyPreRequestHookResult as PromiseLike<FastifyMiddlewarePreRequestHookResult<ConstructionParams>>).then) {
+              fastifyPreRequestHookResult = await fastifyPreRequestHookResult;
+            }
 
             if ((fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult<any>).headers) {
               reply.headers({

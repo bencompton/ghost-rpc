@@ -20,7 +20,7 @@ export type PreRequestHookResult<ConstructionParams> = {
 }
 
 export type WrappedPreRequestHook<ConstructionParams> =
-  (globalParams: any) => PreRequestHookResult<ConstructionParams>;
+  (globalParams: any) => PreRequestHookResult<ConstructionParams> | Promise<PreRequestHookResult<ConstructionParams>>;
 
 export default async <ConstructionParams>(
   servicesFactory: ServicesFactory<any, ConstructionParams>,
@@ -31,7 +31,9 @@ export default async <ConstructionParams>(
   wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null
 ): Promise<IServiceExecutionResult> => {
   let constructionParams: ConstructionParams;
-  let preRequestHookResult: PreRequestHookResult<ConstructionParams> | undefined = undefined;
+  let preRequestHookResult: PreRequestHookResult<ConstructionParams> 
+    | Promise<PreRequestHookResult<ConstructionParams>> 
+    | undefined = undefined;
 
   if (wrappedPreRequestHook) {
     preRequestHookResult = wrappedPreRequestHook(globalParams);
