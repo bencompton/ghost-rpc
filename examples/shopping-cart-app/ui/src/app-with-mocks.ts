@@ -18,8 +18,10 @@ const handler = createLocalHandler<IAppServiceConstructionParams, null>(services
   };
 
   return {
-    repositories: mockRepositories,
-    context
+    constructionParams: {
+      repositories: mockRepositories,
+      context
+    }
   };
 });
 

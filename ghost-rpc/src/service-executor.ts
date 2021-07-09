@@ -14,8 +14,10 @@ export interface IServiceExecutionResult {
   result?: any;
 }
 
-export type PreRequestHookResult<ConstructionParams> = 
-  IServiceExecutionResult | ConstructionParams | Promise<IServiceExecutionResult | ConstructionParams>;
+export type PreRequestHookResult<ConstructionParams> = {
+  constructionParams?: ConstructionParams;
+  serviceExecutionResult?: IServiceExecutionResult;
+}
 
 export type WrappedPreRequestHook<ConstructionParams> =
   (globalParams: any) => PreRequestHookResult<ConstructionParams>;

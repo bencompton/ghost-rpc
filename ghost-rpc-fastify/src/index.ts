@@ -5,8 +5,13 @@ import { Reviver } from '../../ghost-rpc/src/json-parse-reviver';
 import { PreRequestHookResult, WrappedPreRequestHook } from '../../ghost-rpc/src/service-executor';
 import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
 
+export type FastifyMiddlewarePreRequestHookResult<ConstructionParams> = 
+  PreRequestHookResult<ConstructionParams> & {
+    headers: { [key: string]: string };
+  }
+
 export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
-  (request: FastifyRequest, globalParams: any) => PreRequestHookResult<ConstructionParams>;
+  (request: FastifyRequest, globalParams: any) => FastifyMiddlewarePreRequestHookResult<ConstructionParams>
 
 export const createFastifyMiddleware = <ConstructionParams>(
   basePath: string,
@@ -34,7 +39,16 @@ export const createFastifyMiddleware = <ConstructionParams>(
         
         if (preRequestHook) {
           wrappedPreRequestHook = (globalParams: any | null) => {
-            return preRequestHook(request, globalParams);
+            const fastifyPreRequestHookResult = preRequestHook(request, globalParams);
+
+            if ((fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult<any>).headers) {
+              reply.headers({
+                ...reply.headers,
+                ...(fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult<any>).headers
+              });
+            }
+
+            return fastifyPreRequestHookResult;
           };
         }
 

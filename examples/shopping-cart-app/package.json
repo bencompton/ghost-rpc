@@ -4,10 +4,11 @@
   "description": "",
   "main": "dist/src/index.js",
   "scripts": {
+    "build-ghost-rpc": "cd ../../ghost-rpc/ && npm install && npm run build",
+    "build-ghost-rpc-fastify": "cd ../../ghost-rpc-fastify/ && npm install && npm run build",
     "dev": "tsc && vite",
-    "build": "vite build",
-    "test": "jest --colors",
-    "start": "npm run build && node dist/examples/react-app-with-api/api/server.js"
+    "build": "npm run build-ghost-rpc && npm run build-ghost-rpc-fastify && npm install && vite build",
+    "test": "jest --colors"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
