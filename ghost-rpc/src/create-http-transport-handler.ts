@@ -2,12 +2,12 @@ import { ProxyTransportHandler } from './create-proxy';
 import { dateReviver, Reviver } from './json-parse-reviver';
 import { IServiceExecutionResult } from './service-executor';
 
-const httpTransportHandler = async <GlobalParams>(
+const httpTransportHandler = async <GlobalRequestParams>(
   baseUrl: string,
   serviceName: string,
   methodName: string,
   methodArguments: any[],
-  globalParams: GlobalParams,
+  globalRequestParams: GlobalRequestParams,
   serializer: JSON = JSON,
   reviver?: Reviver
 ) => {
@@ -22,7 +22,7 @@ const httpTransportHandler = async <GlobalParams>(
 
     body: serializer.stringify({
       methodArguments,
-      globalParams
+      globalRequestParams: globalRequestParams
     })
   });
 
@@ -36,8 +36,8 @@ export default(baseUrl: string): ProxyTransportHandler => {
     serviceName: string,
     methodName: string,
     methodArgs: any[],
-    globalParams: any
+    globalRequestParams: any
   ) => {
-    return httpTransportHandler(baseUrl, serviceName, methodName, methodArgs, globalParams);
+    return httpTransportHandler(baseUrl, serviceName, methodName, methodArgs, globalRequestParams);
   };
 };

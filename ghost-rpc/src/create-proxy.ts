@@ -6,30 +6,30 @@ export type ProxyTransportHandler = (
   serviceName: string,
   methodName: string,
   methodArgs: any[],
-  globalParams: any
+  globalRequestParams: any
 ) => Promise<IServiceExecutionResult>;
 
-export type GlobalParamsRequestHook<GlobalParams> = () => GlobalParams | Promise<GlobalParams>;
+export type GlobalRequestParamsRequestHook<GlobalRequestParams> = () => GlobalRequestParams | Promise<GlobalRequestParams>;
 
 const createServiceProxy = (
   transportHandler: ProxyTransportHandler,
   serviceName: string,
   onBeforeServiceCallCallbacks: onBeforeServiceCallCallback[],
   onAfterServiceCallCallbacks: onAfterServiceCallCallback[],
-  globalParamsRequestHook?: GlobalParamsRequestHook<any>
+  globalParamsRequestHook?: GlobalRequestParamsRequestHook<any>
 ) => {
   const serviceProxyOptions = {
     get(target: any, methodName: string, reciever: any) {
       return async (...args: any[]) => {
-        let globalParams: any = null;
+        let globalRequestParams: any = null;
 
         if (globalParamsRequestHook) {
           const globalParamsRequestHookResult = globalParamsRequestHook();
 
           if ((globalParamsRequestHookResult as PromiseLike<any>).then) {
-            globalParams = await globalParamsRequestHookResult;
+            globalRequestParams = await globalParamsRequestHookResult;
           } else {
-            globalParams = globalParamsRequestHookResult;
+            globalRequestParams = globalParamsRequestHookResult;
           }          
         }
 
@@ -43,7 +43,7 @@ const createServiceProxy = (
           await Promise.all(beforeServiceCallbackPromises);
         }
 
-        const executionResult = await transportHandler(serviceName, methodName, args, globalParams);
+        const executionResult = await transportHandler(serviceName, methodName, args, globalRequestParams);
 
         const afterServiceCallbackResults = onAfterServiceCallCallbacks
           .map(callback => callback(executionResult));
@@ -69,7 +69,7 @@ const createServiceProxy = (
 
 export default <AppServices>(
   transportHandler: ProxyTransportHandler,
-  globalParamsRequestHook?: GlobalParamsRequestHook<any>
+  globalParamsRequestHook?: GlobalRequestParamsRequestHook<any>
 ): ServicesProxy<AppServices> => {
   const onBeforeServiceCallCallbacks: onBeforeServiceCallCallback[] = [];
   const onAfterServiceCallCallbacks: onAfterServiceCallCallback[] = [];

@@ -12,45 +12,47 @@ export interface IServiceExecutionResult {
   status: ServiceExecutionResultStatus;
   error?: { message: string, stack: string | null };
   result?: any;
+  globalResponseParams?: any;
 }
 
 export type PreRequestHookResult<ConstructionParams> = {
   constructionParams?: ConstructionParams;
   serviceExecutionResult?: IServiceExecutionResult;
+  globalResponseParams?: any;
 }
 
 export type WrappedPreRequestHook<ConstructionParams> =
-  (globalParams: any) => PreRequestHookResult<ConstructionParams> | Promise<PreRequestHookResult<ConstructionParams>>;
+  (globalRequestParams: any) => PreRequestHookResult<ConstructionParams> | Promise<PreRequestHookResult<ConstructionParams>>;
 
 export default async <ConstructionParams>(
   servicesFactory: ServicesFactory<any, ConstructionParams>,
   serviceName: string,
   methodName: string,
   methodArguments: any[],
-  globalParams: any,
+  globalRequestParams: any,
   wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null
 ): Promise<IServiceExecutionResult> => {
-  let constructionParams: ConstructionParams;
+  let constructionParams: ConstructionParams | null = null;
+  let globalResponseParams: any = null;
   let preRequestHookResult: PreRequestHookResult<ConstructionParams> 
     | Promise<PreRequestHookResult<ConstructionParams>> 
     | undefined = undefined;
 
   if (wrappedPreRequestHook) {
-    preRequestHookResult = wrappedPreRequestHook(globalParams);
+    preRequestHookResult = wrappedPreRequestHook(globalRequestParams);
 
     if ((preRequestHookResult as PromiseLike<any>).then) {
       preRequestHookResult = await preRequestHookResult;
     }
   }
 
-  if (
-    preRequestHookResult
-    && (preRequestHookResult as IServiceExecutionResult).status
-    && (preRequestHookResult as IServiceExecutionResult).result
-  ) {
-    return preRequestHookResult as IServiceExecutionResult;
-  } else {
-    constructionParams = preRequestHookResult as ConstructionParams;
+  if (preRequestHookResult) {
+    if ((preRequestHookResult as PreRequestHookResult<ConstructionParams>).serviceExecutionResult) {
+      return (preRequestHookResult as PreRequestHookResult<ConstructionParams>).serviceExecutionResult as IServiceExecutionResult;
+    } else {
+      constructionParams = (preRequestHookResult as PreRequestHookResult<ConstructionParams>).constructionParams as ConstructionParams;
+      globalResponseParams = (preRequestHookResult as PreRequestHookResult<ConstructionParams>).globalResponseParams;
+    }
   }
   
   const serviceFactory = servicesFactory[serviceName];  
@@ -101,7 +103,8 @@ export default async <ConstructionParams>(
 
       return {
         status: 'success',
-        result
+        result,
+        globalResponseParams
       }
     }
   }

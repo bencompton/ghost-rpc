@@ -13,7 +13,7 @@ export default async <ConstructionParams>(
 ) => {
   const deserializedBody = serializer.parse(body, reviver || dateReviver);
   const methodArguments: any[] = deserializedBody.methodArguments;
-  const globalParams: any = deserializedBody.globalParams;
+  const globalRequestParams: any = deserializedBody.globalRequestParams;
   let serviceExecutionResult: IServiceExecutionResult;
 
   serviceExecutionResult = await serviceExecutor(
@@ -21,7 +21,7 @@ export default async <ConstructionParams>(
     serviceName,
     methodName,
     methodArguments,
-    globalParams,
+    globalRequestParams,
     wrappedPreRequestHook
   );
 

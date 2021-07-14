@@ -2,26 +2,26 @@ import { ServicesFactory } from '.';
 import { ProxyTransportHandler } from './create-proxy';
 import serviceExecutor, { WrappedPreRequestHook, PreRequestHookResult } from './service-executor';
 
-export type LocalHandlerPreRequestHook<ConstructionParams, GlobalParamsType> =
-  (globalParams: GlobalParamsType | null) => PreRequestHookResult<ConstructionParams>;
+export type LocalHandlerPreRequestHook<ConstructionParams, GlobalRequestParamsType> =
+  (globalRequestParams: GlobalRequestParamsType | null) => PreRequestHookResult<ConstructionParams>;
 
-export default <ConstructionParams, GlobalParams>(
+export default <ConstructionParams, GlobalRequestParams>(
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  preRequestHook?: LocalHandlerPreRequestHook<ConstructionParams, GlobalParams>
+  preRequestHook?: LocalHandlerPreRequestHook<ConstructionParams, GlobalRequestParams>
 ): ProxyTransportHandler => {
   return (
     serviceName: string,
     methodName: string,
     methodArgs: any[],
-    globalParams: GlobalParams | null
+    globalRequestParams: GlobalRequestParams | null
   ) => {
     let wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null;
     
     if (preRequestHook) {
       wrappedPreRequestHook = (
-        globalParams: GlobalParams | null
+        globalRequestParams: GlobalRequestParams | null
       ) => {
-        return preRequestHook(globalParams);
+        return preRequestHook(globalRequestParams);
       };
     }
 
@@ -30,7 +30,7 @@ export default <ConstructionParams, GlobalParams>(
       serviceName,
       methodName,
       methodArgs,
-      globalParams,
+      globalRequestParams,
       wrappedPreRequestHook
     );
   };
