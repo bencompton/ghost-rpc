@@ -37,7 +37,7 @@ const createServiceProxy = (
           .map(callback => callback(serviceName, methodName, args));
 
         const beforeServiceCallbackPromises = beforeServiceCallbackResults
-          .filter((result) => (result as PromiseLike<any>).then !== undefined);
+          .filter((result) => result && (result as PromiseLike<any>).then !== undefined);
 
         if (beforeServiceCallbackPromises.length) {
           await Promise.all(beforeServiceCallbackPromises);
@@ -49,7 +49,7 @@ const createServiceProxy = (
           .map(callback => callback(executionResult));
 
         const afterServiceCallbackPromises = afterServiceCallbackResults
-          .filter((result) => (result as PromiseLike<any>).then !== undefined);
+          .filter((result) => result && (result as PromiseLike<any>).then !== undefined);
 
         if (afterServiceCallbackPromises.length) {
           await Promise.all(afterServiceCallbackPromises);
