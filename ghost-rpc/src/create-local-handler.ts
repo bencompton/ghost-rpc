@@ -1,13 +1,13 @@
 import { ServicesFactory } from '.';
 import { ProxyTransportHandler } from './create-proxy';
-import serviceExecutor, { WrappedPreRequestHook, PreRequestHookResult } from './service-executor';
+import serviceExecutor, { WrappedPreRequestHook, PreRequestHookResult, PreRequestHookCallback } from './service-executor';
 
-export type LocalHandlerPreRequestHook<ConstructionParams, GlobalRequestParamsType> =
-  (globalRequestParams: GlobalRequestParamsType | null) => PreRequestHookResult<ConstructionParams>;
+export type LocalHandlerPreRequestHook<GlobalRequestParamsType> = 
+  (globalRequestParams: GlobalRequestParamsType | null, next: PreRequestHookCallback) => Promise<PreRequestHookResult>;
 
 export default <ConstructionParams, GlobalRequestParams>(
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  preRequestHook?: LocalHandlerPreRequestHook<ConstructionParams, GlobalRequestParams>
+  preRequestHook?: LocalHandlerPreRequestHook<GlobalRequestParams>
 ): ProxyTransportHandler => {
   return (
     serviceName: string,
@@ -15,13 +15,14 @@ export default <ConstructionParams, GlobalRequestParams>(
     methodArgs: any[],
     globalRequestParams: GlobalRequestParams | null
   ) => {
-    let wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null;
+    let wrappedPreRequestHook: WrappedPreRequestHook | null = null;
     
     if (preRequestHook) {
       wrappedPreRequestHook = (
-        globalRequestParams: GlobalRequestParams | null
+        globalRequestParams: GlobalRequestParams | null,
+        next: PreRequestHookCallback
       ) => {
-        return preRequestHook(globalRequestParams);
+        return preRequestHook(globalRequestParams, next);
       };
     }
 

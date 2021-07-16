@@ -1,6 +1,6 @@
 {
   "name": "ghost-rpc-fastify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Fastify middleware for Ghost RPC",
   "main": "dist/es5/ghost-rpc-fastify/src/index.js",
   "module": "dist/esnext/ghost-rpc-fastify/src/index.js",

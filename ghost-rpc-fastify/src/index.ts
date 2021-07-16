@@ -2,24 +2,25 @@ import { FastifyPluginCallback, FastifyRequest } from 'fastify';
 
 import { ServicesFactory } from '../../ghost-rpc/src';
 import { Reviver } from '../../ghost-rpc/src/json-parse-reviver';
-import { PreRequestHookResult, WrappedPreRequestHook } from '../../ghost-rpc/src/service-executor';
+import { PreRequestHookCallback, PreRequestHookResult, WrappedPreRequestHook } from '../../ghost-rpc/src/service-executor';
 import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
 
-export type FastifyMiddlewarePreRequestHookResult<ConstructionParams> = 
-  PreRequestHookResult<ConstructionParams> & {
+export type FastifyMiddlewarePreRequestHookResult = 
+  PreRequestHookResult & {
     headers: { [key: string]: string };
   }
 
-export type FastifyMiddlewarePreRequestHook<ConstructionParams> =
+export type FastifyMiddlewarePreRequestHook =
   (
     request: FastifyRequest,
-    globalRequestParams: any
-  ) => FastifyMiddlewarePreRequestHookResult<ConstructionParams> | Promise<FastifyMiddlewarePreRequestHookResult<ConstructionParams>>
+    globalRequestParams: any,
+    next: PreRequestHookCallback
+  ) => Promise<FastifyMiddlewarePreRequestHookResult>
 
 export const createFastifyMiddleware = <ConstructionParams>(
   basePath: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  preRequestHook?: FastifyMiddlewarePreRequestHook<ConstructionParams>,
+  preRequestHook?: FastifyMiddlewarePreRequestHook,
   serializer: JSON = JSON,
   reviver?: Reviver
 ): FastifyPluginCallback => {
@@ -38,20 +39,16 @@ export const createFastifyMiddleware = <ConstructionParams>(
         const serviceName: string = params.serviceName;
         const methodName: string = params.methodName;
 
-        let wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null;
+        let wrappedPreRequestHook: WrappedPreRequestHook | null = null;
         
         if (preRequestHook) {
-          wrappedPreRequestHook = async (globalRequestParams: any | null) => {
-            let fastifyPreRequestHookResult = preRequestHook(request, globalRequestParams);
+          wrappedPreRequestHook = async (globalRequestParams: any | null, next: PreRequestHookCallback) => {
+            let fastifyPreRequestHookResult = await preRequestHook(request, globalRequestParams, next);
 
-            if ((fastifyPreRequestHookResult as PromiseLike<FastifyMiddlewarePreRequestHookResult<ConstructionParams>>).then) {
-              fastifyPreRequestHookResult = await fastifyPreRequestHookResult;
-            }
-
-            if ((fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult<any>).headers) {
+            if ((fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult).headers) {
               reply.headers({
                 ...reply.headers,
-                ...(fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult<any>).headers
+                ...(fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult).headers
               });
             }
 

@@ -7,7 +7,7 @@ export default async <ConstructionParams>(
   serviceName: string,
   methodName: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  wrappedPreRequestHook: WrappedPreRequestHook<ConstructionParams> | null = null,
+  wrappedPreRequestHook: WrappedPreRequestHook | null = null,
   serializer: JSON = JSON,
   reviver?: Reviver  
 ) => {
