@@ -23,7 +23,7 @@ export type PreRequestHookResult = {
 export type PreRequestHookCallback = (constructionParams: any) => Promise<IServiceExecutionResult>;
 
 export type WrappedPreRequestHook =
-  (globalRequestParams: any, next: PreRequestHookCallback) => PreRequestHookResult | Promise<PreRequestHookResult>;
+  (globalRequestParams: any, next: PreRequestHookCallback) => Promise<PreRequestHookResult>;
 
 const invokeService = async <ConstructionParams>(
   serviceName: string,
@@ -99,7 +99,7 @@ export default async <ConstructionParams>(
   }    
 
   if (wrappedPreRequestHook) {
-    preRequestHookResult = wrappedPreRequestHook(globalRequestParams, (constructionParams) => {
+    preRequestHookResult = await wrappedPreRequestHook(globalRequestParams, (constructionParams) => {
       return invokeService<ConstructionParams>(
         serviceName,
         methodName,
@@ -108,14 +108,15 @@ export default async <ConstructionParams>(
         constructionParams
       );
     });
-
-    if ((preRequestHookResult as PromiseLike<any>).then) {
-      preRequestHookResult = await preRequestHookResult;
-    }
   
     if (preRequestHookResult) {
       if ((preRequestHookResult as PreRequestHookResult).serviceExecutionResult) {
-        return (preRequestHookResult as PreRequestHookResult).serviceExecutionResult as IServiceExecutionResult;
+        const serviceExecutionResult = preRequestHookResult.serviceExecutionResult as IServiceExecutionResult;
+
+        return {
+          ...serviceExecutionResult,
+          globalResponseParams: preRequestHookResult.globalResponseParams
+        }
       } else {
         throw new Error('Pre-request hook returned no service execution result');
       }
