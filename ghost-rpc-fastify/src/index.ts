@@ -45,10 +45,10 @@ export const createFastifyMiddleware = <ConstructionParams>(
           wrappedPreRequestHook = async (globalRequestParams: any | null, next: PreRequestHookCallback) => {
             let fastifyPreRequestHookResult = await preRequestHook(request, globalRequestParams, next);
 
-            if ((fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult).headers) {
+            if (fastifyPreRequestHookResult.headers) {
               reply.headers({
                 ...reply.headers,
-                ...(fastifyPreRequestHookResult as FastifyMiddlewarePreRequestHookResult).headers
+                ...fastifyPreRequestHookResult.headers
               });
             }
 
@@ -67,6 +67,11 @@ export const createFastifyMiddleware = <ConstructionParams>(
         );
 
         reply.statusCode = result.statusCode;
+
+        if (result.serviceExecutionResult.error) {
+          fastify.log.error(result.serviceExecutionResult.error);
+        }
+
         reply.send(result.serviceExecutionResult);
       },
       onRequest(request: any, reply: any, done: any) {
