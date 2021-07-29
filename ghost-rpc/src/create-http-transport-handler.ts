@@ -31,13 +31,25 @@ const httpTransportHandler = async <GlobalRequestParams>(
   return serializer.parse(responseText, reviver || dateReviver) as IServiceExecutionResult;
 };
 
-export default(baseUrl: string): ProxyTransportHandler => {
+export default(
+  baseUrl: string,
+  serializer?: JSON,
+  reviver?: Reviver
+): ProxyTransportHandler => {
   return (
     serviceName: string,
     methodName: string,
     methodArgs: any[],
     globalRequestParams: any
   ) => {
-    return httpTransportHandler(baseUrl, serviceName, methodName, methodArgs, globalRequestParams);
+    return httpTransportHandler(
+      baseUrl,
+      serviceName,
+      methodName,
+      methodArgs,
+      globalRequestParams,
+      serializer,
+      reviver
+    );
   };
 };
