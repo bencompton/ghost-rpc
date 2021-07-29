@@ -1,5 +1,6 @@
 import { ProxyTransportHandler } from './create-proxy';
 import { dateReviver, Reviver } from './json-parse-reviver';
+import { ISerializer } from './serializer';
 import { IServiceExecutionResult } from './service-executor';
 
 const httpTransportHandler = async <GlobalRequestParams>(
@@ -8,7 +9,7 @@ const httpTransportHandler = async <GlobalRequestParams>(
   methodName: string,
   methodArguments: any[],
   globalRequestParams: GlobalRequestParams,
-  serializer: JSON = JSON,
+  serializer: ISerializer = JSON,
   reviver?: Reviver
 ) => {
   const baseUrlWithNoTrailingSlash = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
@@ -33,7 +34,7 @@ const httpTransportHandler = async <GlobalRequestParams>(
 
 export default(
   baseUrl: string,
-  serializer?: JSON,
+  serializer?: ISerializer,
   reviver?: Reviver
 ): ProxyTransportHandler => {
   return (

@@ -1,5 +1,6 @@
 import { ServicesFactory } from './';
 import { dateReviver, Reviver } from './json-parse-reviver';
+import { ISerializer } from './serializer';
 import serviceExecutor, { IServiceExecutionResult, WrappedPreRequestHook } from './service-executor';
 
 export default async <ConstructionParams>(
@@ -8,10 +9,10 @@ export default async <ConstructionParams>(
   methodName: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
   wrappedPreRequestHook: WrappedPreRequestHook | null = null,
-  serializer: JSON = JSON,
+  serializer: ISerializer = JSON,
   reviver?: Reviver  
 ) => {
-  const deserializedBody = serializer.parse(body, reviver || dateReviver);
+  const deserializedBody = serializer.parse<any>(body, reviver || dateReviver);
   const methodArguments: any[] = deserializedBody.methodArguments;
   const globalRequestParams: any = deserializedBody.globalRequestParams;
   let serviceExecutionResult: IServiceExecutionResult;

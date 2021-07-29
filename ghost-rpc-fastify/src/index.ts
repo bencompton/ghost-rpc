@@ -4,6 +4,7 @@ import { ServicesFactory } from '../../ghost-rpc/src';
 import { Reviver } from '../../ghost-rpc/src/json-parse-reviver';
 import { PreRequestHookCallback, PreRequestHookResult, WrappedPreRequestHook } from '../../ghost-rpc/src/service-executor';
 import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
+import { ISerializer } from '../../ghost-rpc/src/serializer';
 
 export type FastifyMiddlewarePreRequestHookResult = 
   PreRequestHookResult & {
@@ -21,7 +22,7 @@ export const createFastifyMiddleware = <ConstructionParams>(
   basePath: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
   preRequestHook?: FastifyMiddlewarePreRequestHook,
-  serializer: JSON = JSON,
+  serializer: ISerializer = JSON,
   reviver?: Reviver
 ): FastifyPluginCallback => {
   const basePathWithNoTrailingSlash = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
