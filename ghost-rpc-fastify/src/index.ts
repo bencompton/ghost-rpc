@@ -7,7 +7,7 @@ import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
 
 export type FastifyMiddlewarePreRequestHookResult = 
   PreRequestHookResult & {
-    headers: { [key: string]: string };
+    headers: Headers;
   }
 
 export type FastifyMiddlewarePreRequestHook =
@@ -46,9 +46,8 @@ export const createFastifyMiddleware = <ConstructionParams>(
             let fastifyPreRequestHookResult = await preRequestHook(request, globalRequestParams, next);
 
             if (fastifyPreRequestHookResult.headers) {
-              reply.headers({
-                ...reply.headers,
-                ...fastifyPreRequestHookResult.headers
+              fastifyPreRequestHookResult.headers.forEach((value, key) => {
+                reply.header(key, value);
               });
             }
 
