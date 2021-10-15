@@ -12,16 +12,23 @@ import { getActions } from './app/actions';
 import { getStore } from './app/store';
 import { mockRepositories } from '../../shared/mock-repositories';
 
-const handler = createLocalHandler<IAppServiceConstructionParams, null>(servicesFactory, () => {
+const handler = createLocalHandler<IAppServiceConstructionParams, null>(
+  servicesFactory, 
+  async (globalRequestParams, next) => {
+
   const context: IAppServiceContext = {
     loggedInUserId: 1
   };
 
+  const constructionParams = {
+    repositories: mockRepositories,
+    context
+  };
+
+  const serviceExecutionResult = await next(constructionParams);
+
   return {
-    constructionParams: {
-      repositories: mockRepositories,
-      context
-    }
+    serviceExecutionResult
   };
 });
 

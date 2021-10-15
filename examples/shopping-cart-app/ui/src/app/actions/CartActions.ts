@@ -28,7 +28,7 @@ export default class CartActions extends Actions<IAppState> {
       const cartProducts = await this.cartService.loadMyCart();
       this.cartFetchSucceeded(cartProducts);
     } catch (error) {
-      this.cartFetchFailed(error);
+      this.cartFetchFailed(error as Error);
     }
   }
 
@@ -49,7 +49,7 @@ export default class CartActions extends Actions<IAppState> {
       await this.cartService.addToCart(productId);
       this.productAddedToCart(productId);
     } catch (error) {
-      this.addToCartFailed(error);
+      this.addToCartFailed(error as Error);
     }
   }
 

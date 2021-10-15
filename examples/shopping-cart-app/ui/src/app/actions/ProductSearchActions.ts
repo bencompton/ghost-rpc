@@ -22,7 +22,7 @@ export default class ProductSearchActions extends Actions<IAppState> {
       const products = await this.productSearchService.getFeaturedProducts();
       this.featuredProductFetchSucceeded(products);
     } catch (error) {
-      this.featuredProductFetchFailed(error);
+      this.featuredProductFetchFailed(error as Error);
     }
   }
 
@@ -41,7 +41,7 @@ export default class ProductSearchActions extends Actions<IAppState> {
       const products = await this.productSearchService.searchForProduct(searchText);
       this.productSearchSucceeded(searchText, products);
     } catch (error) {
-      this.productSearchFailed(error);
+      this.productSearchFailed(error as Error);
     }
   }
 

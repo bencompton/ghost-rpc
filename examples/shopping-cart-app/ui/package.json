@@ -6,19 +6,19 @@
   "scripts": {
     "build-ghost-rpc": "cd ../../ghost-rpc/ && npm install && npm run build",
     "build-ghost-rpc-fastify": "cd ../../ghost-rpc-fastify/ && npm install && npm run build",
-    "dev": "tsc && vite",
+    "dev": "tsc --noEmit && vite",
     "build": "npm run build-ghost-rpc && npm run build-ghost-rpc-fastify && npm install && vite build",
     "test": "jest --colors"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
-    "@vitejs/plugin-react-refresh": "^1.3.1",
+    "@vitejs/plugin-react": "^1.0.0",
     "jest": "^26.0.0",
     "jest-cucumber": "^3.0.1",
     "less": "^4.1.1",
     "ts-jest": "^26.0.0",
     "typescript": "^4.3.2",
-    "vite": "^2.3.5"
+    "vite": "^2.6.4"
   },
   "dependencies": {
     "@types/node": "^15.12.0",
@@ -30,8 +30,8 @@
     "antd": "^3.10.0",
     "fastify": "^3.6.0",
     "fastify-vite": "^2.1.3",
-    "ghost-rpc": "../../ghost-rpc/",
-    "ghost-rpc-fastify": "../../ghost-rpc-fastify/",
+    "ghost-rpc": "../../../ghost-rpc/",
+    "ghost-rpc-fastify": "../../../ghost-rpc-fastify/",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux-retro": "^1.0.4",

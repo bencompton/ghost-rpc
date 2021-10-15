@@ -63,9 +63,17 @@ const invokeService = async <ConstructionParams>(
           result = methodReturnValue;
         }
       } catch (error) {
+        let executionFailedError: { message: string, stack: string };
+
+        if (error instanceof Error) {
+          executionFailedError = { message: error.message, stack: error.stack || '' };
+        } else {
+          executionFailedError = { message: 'An unexpected error occurred', stack: '' }
+        }
+
         return {
           status: 'executionFailed',
-          error: { message: error.message, stack: error.stack }
+          error: executionFailedError
         }
       }
 
