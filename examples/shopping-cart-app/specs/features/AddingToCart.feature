@@ -1,4 +1,7 @@
 Feature: Adding to cart
+  In order to facilitate purchasing multiple products in one transaction
+  As a shopper
+  I would like the ability to add products to my cart
 
   Scenario: Adding a product to cart
     Given I have 0 products in my cart
