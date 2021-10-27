@@ -1,0 +1,29 @@
+{
+  "name": "shopping-cart-app-root",
+  "version": "0.1.0",
+  "scripts": {
+    "build-ghost-rpc": "cd ../../ghost-rpc/ && npm run build && cd ../ghost-rpc-fastify && npm run build",
+    "install:api": "cd api && npm install",
+    "install:shared": "cd shared && npm install",
+    "install:ui": "cd ui && npm install",
+    "install:specs": "cd specs && npm install",
+    "install:db": "cd database && npm install",
+    "dev-with-mocks": "cd ui && npm run dev",
+    "dev-full": "concurrently --kill-others \"cd api && npm start\" \"cd ui && npm run dev-full\"",
+    "debug-full": "concurrently --kill-others \"cd ui && npm run dev-full\"",
+    "postinstall": "concurrently \"npm:install:*\"",
+    "test": "cd specs && npm test",
+    "purge-node-modules": "concurrently \"npm:purge-node-modules:*\"",
+    "purge-node-modules:api": "cd api && rm -rf node_modules && rm -rf package-lock.json",
+    "purge-node-modules:shared": "cd shared && rm -rf node_modules && rm -rf package-lock.json",
+    "purge-node-modules:specs": "cd specs && rm -rf node_modules && rm -rf package-lock.json",
+    "purge-node-modules:db": "cd database && rm -rf node_modules && rm -rf package-lock.json"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "@types/sql.js": "^1.4.2"
+  }
+}

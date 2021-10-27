@@ -4,12 +4,12 @@ module.exports = {
     "ts",
     "tsx"
   ],
-  "moduleNameMapper": {
-    "^.+\\.(css|less)$": "<rootDir>/specs/test-run-utils/ReactComponentMock",
-    "^.+\\.(gif|ttf|eot|svg|png)$": "<rootDir>/specs/test-run-utils/ReactComponentMock"
+  "moduleNameMapper": {    
+    "^.+\\.(css|less)$": "<rootDir>/test-run-utils/ReactComponentMock",
+    "^.+\\.(gif|ttf|eot|svg|png)$": "<rootDir>/test-run-utils/ReactComponentMock"
   },
   "setupFiles": [
-    "./specs/test-run-utils/MockBrowserEnvironment"
+    "./test-run-utils/MockBrowserEnvironment"
   ],
   "testMatch": [
     "**/*.spec.ts",

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Drawer, Icon } from 'antd/lib/';
-import { DrawerProps } from 'antd/lib/drawer';
+import { Icon } from 'antd/lib/';
 import MediaQuery from 'react-responsive';
 
 import '../../../less/cart/CartPage.less';

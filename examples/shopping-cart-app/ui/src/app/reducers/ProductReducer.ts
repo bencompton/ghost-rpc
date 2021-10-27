@@ -2,17 +2,17 @@ import { createReducer } from 'redux-retro';
 
 import ProductSearchActions from '../actions/ProductSearchActions';
 import CartActions from '../actions/CartActions';
-import { IProduct } from '../../../../shared/services/product-search-service';
+import { IProductSearchResult } from '../../../../shared/repositories/product-search-repository';
 
 export interface IProductState {
-  downloadedProducts: { [productId: number]: IProduct };
+  downloadedProducts: { [productId: number]: IProductSearchResult };
 }
 
 const initialState: IProductState = {
   downloadedProducts: {}
 };
 
-const convertProductListToMap = (products: IProduct[]) => {
+const convertProductListToMap = (products: IProductSearchResult[]) => {
   return products.reduce(
     (productMap, nextProduct) => {
       return {
@@ -24,7 +24,7 @@ const convertProductListToMap = (products: IProduct[]) => {
   );
 };
 
-const getDownloadedProductsWithNewProductsAdded = (state: IProductState, newProducts: IProduct[]) => {
+const getDownloadedProductsWithNewProductsAdded = (state: IProductState, newProducts: IProductSearchResult[]) => {
   return {
     ...state,
     downloadedProducts: {

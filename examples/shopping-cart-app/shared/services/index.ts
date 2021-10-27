@@ -2,7 +2,7 @@ import { ServicesFactory } from 'ghost-rpc';
 
 import ProductSearchService from './product-search-service';
 import CartService from './cart-service';
-import { IAppRepositories } from '../mock-repositories';
+import { IAppRepositories } from '../repositories';
 
 export interface IAppServices {
   cartService: CartService;

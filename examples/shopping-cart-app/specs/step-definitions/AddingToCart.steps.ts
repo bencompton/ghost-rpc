@@ -4,19 +4,19 @@ import CartWorkflow from '../test-workflows/CartWorkflow';
 import ProductSearchWorkflow from '../test-workflows/ProductSearchWorkflow';
 import CheckoutWorkflow from '../test-workflows/CheckoutWorkflow';
 
-const feature = loadFeature('specs/features/AddingToCart.feature');
+const feature = loadFeature('features/AddingToCart.feature');
 
 defineFeature(feature, (test) => {
   let cartWorkflow: CartWorkflow;
   let productSearchWorkflow: ProductSearchWorkflow;
   let checkoutWorkflow: CheckoutWorkflow;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     cartWorkflow = new CartWorkflow();
     productSearchWorkflow = new ProductSearchWorkflow(cartWorkflow.context);
     checkoutWorkflow = new CheckoutWorkflow(cartWorkflow.context);
 
-    return cartWorkflow.startApp();
+    await cartWorkflow.startApp();
   });
 
   const givenIHaveAddedAProductToMyCart = (given: DefineStepFunction) => {

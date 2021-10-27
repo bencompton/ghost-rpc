@@ -1,13 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { createHttpTransportHandler, createProxy } from '../../../../ghost-rpc/src';
+import { createProxy, createHttpTransportHandler } from 'ghost-rpc';
 
 import { IAppServices } from '../../shared/services';
 
-const transportHandler = createHttpTransportHandler('./api/');
-const proxy = createProxy<IAppServices>(transportHandler);
+import { renderApp } from './app/components/App';
+import { getActions } from './app/actions';
+import { getStore } from './app/store';
 
-ReactDOM.render(
-  React.createElement(React.StrictMode, null, React.createElement('div', null, 'Test example')),
-  document.getElementById('root')
-);
+const init = async () => {
+  const handler = createHttpTransportHandler('/api/');  
+  const ghostRpcServices = createProxy<IAppServices>(handler);
+  const store = getStore();
+  const actions = getActions(store, ghostRpcServices);
+  
+  renderApp(store, actions);
+  
+  actions.appStartup.startApp();  
+};
+
+init();

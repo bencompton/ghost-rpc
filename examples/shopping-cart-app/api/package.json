@@ -1,0 +1,32 @@
+{
+  "name": "shopping-cart-app-api",
+  "version": "1.0.0",
+  "description": "Shopping Cart App API",
+  "main": "dist/api/server.js",
+  "scripts": {
+    "build": "rm -rf ./dist/ && tsc --incremental",
+    "copy-ui": "rm -rf ./dist/ui/ && cp -r ../ui/dist/ ./dist/ui/",
+    "start": "npm run build && node ./dist/api/src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.cerner.com/ExtendedCareLTC/caretracker"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.2",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "@types/sql.js": "^1.4.3",
+    "@types/uuid": "^8.3.1",
+    "fastify": "^3.17.0",
+    "fastify-static": "^4.2.2",
+    "fs-extra": "^9.0.1",
+    "ghost-rpc": "../../../ghost-rpc/",
+    "ghost-rpc-fastify": "../../../ghost-rpc-fastify/",
+    "io-source": "3.0.1",
+    "sql.js": "^1.6.2",
+    "typeorm": "^0.2.38",
+    "uuid": "^8.3.2"
+  }
+}

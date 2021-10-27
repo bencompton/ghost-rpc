@@ -1,7 +1,7 @@
 import { Actions } from 'redux-retro';
 import type { Store } from 'redux';
-import { IAppState } from '../store';
 
+import { IAppState } from '../store';
 import MainNavigationActions from './MainNavigationActions';
 import ProductSearchActions from './ProductSearchActions';
 import CartActions from './CartActions';

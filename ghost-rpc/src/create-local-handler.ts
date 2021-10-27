@@ -1,6 +1,6 @@
 import { ServicesFactory } from '.';
 import { ProxyTransportHandler } from './create-proxy';
-import serviceExecutor, { WrappedPreRequestHook, PreRequestHookResult, PreRequestHookCallback } from './service-executor';
+import serviceExecutor, { PreRequestHook, PreRequestHookResult, PreRequestHookCallback } from './service-executor';
 
 export type LocalHandlerPreRequestHook<GlobalRequestParamsType> = 
   (globalRequestParams: GlobalRequestParamsType | null, next: PreRequestHookCallback) => Promise<PreRequestHookResult>;
@@ -15,7 +15,7 @@ export default <ConstructionParams, GlobalRequestParams>(
     methodArgs: any[],
     globalRequestParams: GlobalRequestParams | null
   ) => {
-    let wrappedPreRequestHook: WrappedPreRequestHook | null = null;
+    let wrappedPreRequestHook: PreRequestHook | null = null;
     
     if (preRequestHook) {
       wrappedPreRequestHook = (

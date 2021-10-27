@@ -1,14 +1,14 @@
 import { ServicesFactory } from './';
 import { dateReviver, Reviver } from './json-parse-reviver';
 import { ISerializer } from './serializer';
-import serviceExecutor, { IServiceExecutionResult, WrappedPreRequestHook } from './service-executor';
+import serviceExecutor, { IServiceExecutionResult, PreRequestHook } from './service-executor';
 
 export default async <ConstructionParams>(
   body: string,
   serviceName: string,
   methodName: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  wrappedPreRequestHook: WrappedPreRequestHook | null = null,
+  wrappedPreRequestHook: PreRequestHook | null = null,
   serializer: ISerializer = JSON,
   reviver?: Reviver  
 ) => {

@@ -1,23 +1,28 @@
+import { ServiceProxy } from 'ghost-rpc';
 import { Actions } from 'redux-retro';
 import { Store } from 'redux';
+
 import { IAppState } from '../store';
-import MainNavigationActions from './MainNavigationActions';
+import CartService from '../../../../shared/services/cart-service';
+import AppStartupActions from './AppStartupActions';
 
 export default class CheckoutActions extends Actions<IAppState> {
-  private mainNavigationActions: MainNavigationActions;
+  private cartService: ServiceProxy<CartService>;
+  private appStartupActions: AppStartupActions;
 
   constructor(
     store: Store<IAppState>,
-    mainNavigationActions: MainNavigationActions
+    appStartupActions: AppStartupActions,
+    cartService: ServiceProxy<CartService>
   ) {
     super(store);
 
-    this.mainNavigationActions = mainNavigationActions;
+    this.cartService = cartService;
+    this.appStartupActions = appStartupActions;
   }
 
-  public proceedToCheckout(): any {
-    this.mainNavigationActions.navigateTo('/');
-
-    return null;
+  public async proceedToCheckout() {
+    await this.cartService.proceedToCheckout();
+    await this.appStartupActions.startApp();
   }
 }

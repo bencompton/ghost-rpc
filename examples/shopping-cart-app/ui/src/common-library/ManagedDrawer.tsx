@@ -24,6 +24,7 @@ export default class extends React.Component<DrawerProps, any> {
       visible: false
     });
 
+    const setTimeout = (globalThis as any).setTimeout;
     setTimeout(() => this.props.onClose && this.props.onClose(e), 500);
   }
 }

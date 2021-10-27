@@ -23,8 +23,8 @@ export const getActions = (store: Store<IAppState>, services: ServicesProxy<IApp
   actions.mainNavigation = new MainNavigationActions(store);
   actions.productSearch = new ProductSearchActions(store, services.productSearchService);
   actions.cart = new CartActions(store, services.cartService, actions.mainNavigation);
-  actions.checkout = new CheckoutActions(store, actions.mainNavigation);
   actions.appStartup = new AppStartupActions(store, actions.mainNavigation, actions.productSearch, actions.cart);
+  actions.checkout = new CheckoutActions(store, actions.appStartup, services.cartService);
 
   return actions;
 };

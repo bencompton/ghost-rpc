@@ -1,5 +1,5 @@
 import { IAppServiceContext } from '.';
-import { ICartRepository } from '../mock-repositories';
+import { ICartRepository } from '../repositories';
 
 export default class {
   private context: IAppServiceContext;
@@ -19,5 +19,9 @@ export default class {
 
   public loadMyCart() {
     return this.cartRepository.getProductsInCart(this.context.loggedInUserId);
+  }
+
+  public async proceedToCheckout() {
+    this.cartRepository.clearCart(this.context.loggedInUserId);
   }
 }

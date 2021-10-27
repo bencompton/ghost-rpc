@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "lib": ["ESNext", "DOM"],
+    "types": ["jest"],
+    "declaration": true,
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "outDir": "dist",
+    "strict": true,
+    "jsx": "react",
+    "esModuleInterop": true
+  },
+  "exclude": [
+    "dist"
+  ]
+}

@@ -6,7 +6,7 @@ import { productAlreadyInCart } from '../selectors/CartSelectors';
 import CartService from '../../../../shared/services/cart-service';
 import MainNavigationActions from './MainNavigationActions';
 import { IAppState } from '../store';
-import { IProduct } from '../../../../shared/services/product-search-service';
+import { ICartProduct } from '../../../../shared/repositories/cart-repository';
 
 export default class CartActions extends Actions<IAppState> {
   private cartService: ServiceProxy<CartService>;
@@ -32,7 +32,7 @@ export default class CartActions extends Actions<IAppState> {
     }
   }
 
-  public cartFetchSucceeded(cartProducts: IProduct[]) {
+  public cartFetchSucceeded(cartProducts: ICartProduct[]) {
     return cartProducts;
   }
 

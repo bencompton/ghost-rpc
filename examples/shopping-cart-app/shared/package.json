@@ -1,0 +1,11 @@
+{
+  "name": "ghost-rpc-example-database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/src/index.js",
+  "dependencies": {
+    "@types/node": "^15.12.0",
+    "ghost-rpc": "../../../ghost-rpc/",
+    "typeorm": "^0.2.38"
+  }
+}

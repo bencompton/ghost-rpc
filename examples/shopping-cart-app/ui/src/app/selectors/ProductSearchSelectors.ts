@@ -1,9 +1,9 @@
 import { IAppState } from '../store';
 import { getProductIdsInCart } from './CartSelectors';
 import { getDownloadedProducts } from './ProductSelectors';
-import { IProduct } from '../../../../shared/services/product-search-service';
+import { IProductSearchResult } from '../../../../shared/repositories/product-search-repository';
 
-export interface ISearchResultProduct extends IProduct {
+export interface ISearchResultProduct extends IProductSearchResult {
   isInCart: boolean;
 }
 

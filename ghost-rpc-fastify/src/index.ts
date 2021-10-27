@@ -2,14 +2,14 @@ import { FastifyPluginCallback, FastifyRequest } from 'fastify';
 
 import { ServicesFactory } from '../../ghost-rpc/src';
 import { Reviver } from '../../ghost-rpc/src/json-parse-reviver';
-import { PreRequestHookCallback, PreRequestHookResult, WrappedPreRequestHook } from '../../ghost-rpc/src/service-executor';
+import { PreRequestHook, PreRequestHookCallback, PreRequestHookResult } from '../../ghost-rpc/src/service-executor';
 import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
 import { ISerializer } from '../../ghost-rpc/src/serializer';
 
 export type FastifyMiddlewarePreRequestHookResult = 
   PreRequestHookResult & {
-    headers: Headers;
-  }
+    headers?: Headers;
+  };
 
 export type FastifyMiddlewarePreRequestHook =
   (
@@ -40,7 +40,7 @@ export const createFastifyMiddleware = <ConstructionParams>(
         const serviceName: string = params.serviceName;
         const methodName: string = params.methodName;
 
-        let wrappedPreRequestHook: WrappedPreRequestHook | null = null;
+        let wrappedPreRequestHook: PreRequestHook | null = null;
         
         if (preRequestHook) {
           wrappedPreRequestHook = async (globalRequestParams: any | null, next: PreRequestHookCallback) => {

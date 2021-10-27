@@ -1,28 +1,27 @@
 import { Store } from 'redux';
 import { createLocalHandler, createProxy, ServicesProxy } from 'ghost-rpc';
+import { getConnection } from '../../database/connections/sql-js-node';
 
 import { IAppActions, getActions } from '../../ui/src/app/actions';
 import { IAppState, getStore } from '../../ui/src/app/store';
-import { IAppServiceConstructionParams, IAppServiceContext, IAppServices, servicesFactory } from '../../shared/services';
-import { mockRepositories } from '../../shared/mock-repositories';
+import { IAppServiceConstructionParams, IAppServices, servicesFactory } from '../../shared/services';
+import createGhostRpcHandlerPreRequestHook from '../../shared/create-ghost-rpc-prerequest-hook';
+import DatabaseConnectionFactory from '../../database/connections/connection-factory';
 
 export interface ITestWorkflowContext {
   services: ServicesProxy<IAppServices>;
   actions: IAppActions;
   store: Store<IAppState>;
+  databaseConnection: DatabaseConnectionFactory;
 }
 
 const getTestSetup = () => {
-  const handler = createLocalHandler<IAppServiceConstructionParams, null>(servicesFactory, () => {
-    const context: IAppServiceContext = {
-      loggedInUserId: 1
-    };
-  
-    return {
-      repositories: mockRepositories,
-      context
-    };
-  });
+  const databaseConnection = new DatabaseConnectionFactory(getConnection, true);
+
+  const handler = createLocalHandler<IAppServiceConstructionParams, null>(
+    servicesFactory, 
+    createGhostRpcHandlerPreRequestHook(databaseConnection)
+  );
 
   const services = createProxy<IAppServices>(handler)
   const store = getStore();
@@ -31,7 +30,8 @@ const getTestSetup = () => {
   return {
     services,
     actions,
-    store
+    store,
+    databaseConnection
   };
 };
 

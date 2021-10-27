@@ -23,7 +23,4 @@ export default createReducer<ICartState>(initialState)
       ...state,
       productIdsInCart: action.payload.map(product => product.id)
     };
-  })
-  .bindAction(CheckoutActions.prototype.proceedToCheckout, () => {
-    return initialState;
   });

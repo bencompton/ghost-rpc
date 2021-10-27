@@ -1,12 +1,4 @@
-import { IProductSearchRepository } from '../mock-repositories';
-
-export interface IProduct {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-}
+import { IProductSearchRepository } from '../repositories';
 
 export default class {
   private productSearchRepository: IProductSearchRepository;
@@ -17,10 +9,6 @@ export default class {
 
   public getFeaturedProducts() {
     return this.productSearchRepository.getFeaturedProducts();
-  }
-
-  public getSearchSuggestions(searchText: string) {
-    return this.productSearchRepository.getProductSearchSuggestions(searchText);
   }
 
   public searchForProduct(searchText: string) {

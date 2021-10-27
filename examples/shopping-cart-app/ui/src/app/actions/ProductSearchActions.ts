@@ -3,7 +3,8 @@ import { Store } from 'redux';
 import { ServiceProxy } from 'ghost-rpc';
 
 import { IAppState } from '../store';
-import ProductSearchService, { IProduct } from '../../../../shared/services/product-search-service';
+import ProductSearchService from '../../../../shared/services/product-search-service';
+import { IProductSearchResult } from '../../../../shared/repositories/product-search-repository';
 
 export default class ProductSearchActions extends Actions<IAppState> {
   private productSearchService: ServiceProxy<ProductSearchService>;
@@ -26,7 +27,7 @@ export default class ProductSearchActions extends Actions<IAppState> {
     }
   }
 
-  public featuredProductFetchSucceeded(products: IProduct[]) {
+  public featuredProductFetchSucceeded(products: IProductSearchResult[]) {
     return products;
   }
 
@@ -49,7 +50,7 @@ export default class ProductSearchActions extends Actions<IAppState> {
     return searchText;
   }
 
-  public productSearchSucceeded(searchText: string, products: IProduct[]) {
+  public productSearchSucceeded(searchText: string, products: IProductSearchResult[]) {
     return {
       searchText,
       products

@@ -22,7 +22,7 @@ export type PreRequestHookResult = {
 
 export type PreRequestHookCallback = (constructionParams: any) => Promise<IServiceExecutionResult>;
 
-export type WrappedPreRequestHook =
+export type PreRequestHook =
   (globalRequestParams: any, next: PreRequestHookCallback) => Promise<PreRequestHookResult>;
 
 const invokeService = async <ConstructionParams>(
@@ -91,7 +91,7 @@ export default async <ConstructionParams>(
   methodName: string,
   methodArguments: any[],
   globalRequestParams: any,
-  wrappedPreRequestHook: WrappedPreRequestHook | null = null
+  preRequestHook: PreRequestHook | null = null
 ): Promise<IServiceExecutionResult> => {
   let preRequestHookResult: PreRequestHookResult 
     | Promise<PreRequestHookResult> 
@@ -106,8 +106,8 @@ export default async <ConstructionParams>(
     };
   }    
 
-  if (wrappedPreRequestHook) {
-    preRequestHookResult = await wrappedPreRequestHook(globalRequestParams, (constructionParams) => {
+  if (preRequestHook) {
+    preRequestHookResult = await preRequestHook(globalRequestParams, (constructionParams) => {
       return invokeService<ConstructionParams>(
         serviceName,
         methodName,

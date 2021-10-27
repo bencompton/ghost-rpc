@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Debug API",
-            "preLaunchTask": "Build API",
-            "program": "${workspaceFolder}/examples/react-app-with-api/api/dist/examples/react-app-with-api/api/server.js"
+            //"preLaunchTask": "Build API",
+            "program": "${workspaceFolder}/examples/shopping-cart-app/api/dist/api/src/server.js"
         }
     ]
 }

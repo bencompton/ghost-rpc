@@ -1,7 +1,7 @@
 import createProxy from './create-proxy';
 import createHttpTransportHandler from './create-http-transport-handler';
 import createLocalHandler from './create-local-handler';
-import type { IServiceExecutionResult, PreRequestHookCallback, PreRequestHookResult } from './service-executor';
+import type { IServiceExecutionResult, PreRequestHook, PreRequestHookCallback, PreRequestHookResult } from './service-executor';
 import { RpcProxyError } from './rpc-proxy-error';
 
 export type ServiceProxy<Type> = {
@@ -40,6 +40,7 @@ export {
   createLocalHandler,
   IServiceExecutionResult,
   RpcProxyError,
+  PreRequestHook,
   PreRequestHookCallback,
   PreRequestHookResult
 };

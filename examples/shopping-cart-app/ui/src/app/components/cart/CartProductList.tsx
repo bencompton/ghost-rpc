@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { List, Avatar } from 'antd/lib/';
 
-import { IProduct } from '../../../../../shared/services/product-search-service';
+import { ICartProduct } from '../../../../../shared/repositories/cart-repository';
 
 export interface ICartProductListProps {
-  productsInCart: IProduct[];
+  productsInCart: ICartProduct[];
 }
 
 export default (props: ICartProductListProps) => (
@@ -12,7 +12,7 @@ export default (props: ICartProductListProps) => (
     itemLayout="horizontal"
     dataSource={props.productsInCart}
     locale={{ emptyText: 'Nothing in your cart :(' }}
-    renderItem={(item: IProduct) => (
+    renderItem={(item: ICartProduct) => (
       <List.Item>
         <List.Item.Meta
           avatar={<Avatar src={`./assets/images/products/${item.image}`} />}
