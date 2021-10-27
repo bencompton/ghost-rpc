@@ -1,10 +1,11 @@
 import fastify from 'fastify';
-import { createFastifyMiddleware } from 'ghost-rpc-fastify';
+import { createFastifyMiddleware, FastifyMiddlewarePreRequestHook } from 'ghost-rpc-fastify';
 
 import { servicesFactory } from '../../shared/services';
 import { getConnection } from '../../database/connections/sql-js-node';
 import createGhostRpcHandlerPreRequestHook from '../../shared/create-ghost-rpc-prerequest-hook';
 import DatabaseConnectionFactory from '../../database/connections/connection-factory';
+import { PreRequestHook } from 'ghost-rpc-fastify/dist/es5/ghost-rpc/src';
 
 const start = async () => {
   const server = fastify({
@@ -12,12 +13,16 @@ const start = async () => {
   });
 
   const databaseConnection = new DatabaseConnectionFactory(getConnection, true);  
+  const preRequestHook = createGhostRpcHandlerPreRequestHook(databaseConnection);
   
   const ghostRpcMiddleware = createFastifyMiddleware(
     '/api/',
     servicesFactory,
-    createGhostRpcHandlerPreRequestHook(databaseConnection)   
+    (request, globalRequestParams, next) => preRequestHook(globalRequestParams, next)
   );
+
+  const blah = { } as PreRequestHook;
+  const requestHook: FastifyMiddlewarePreRequestHook = blah;
 
   server.register(ghostRpcMiddleware);
 
