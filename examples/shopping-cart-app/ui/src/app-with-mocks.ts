@@ -16,6 +16,10 @@ import DatabaseConnectionFactory from '../../database/connections/connection-fac
 const init = async () => {
   const databaseConnection = new DatabaseConnectionFactory(getConnection, true);
 
+  // This is for conveniently accessing the DB from the browser dev tools
+  // (e.g., db.query('select * from product'))
+  (window as any).db = await databaseConnection.getConnection();
+
   const handler = createLocalHandler<IAppServiceConstructionParams, null>(
     servicesFactory, 
     createGhostRpcHandlerPreRequestHook(databaseConnection)
