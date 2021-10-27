@@ -108,9 +108,9 @@ console.log(sum); // 4
 
 ## Examples
 
-* [Shopping Cart App](./examples/shopping-cart-app) - A demo showcasing Ghost RPC with React, Redux and TypeORM + SQL.js. The same service clases, database schema, data access logic, and front-end Redux state management logic is exercised from integration tests, the full stack running in the browser (mock mode), and the stack separated between the browser and Node.js (full mode).
+* [Shopping Cart App](./examples/shopping-cart-app) - A demo showcasing Ghost RPC with React, Redux and TypeORM + SQL.js. The same service classes, database schema, data access logic, and front-end Redux state management logic are exercised from integration tests, the full stack running in the browser (mock mode), and the stack separated between the browser and Node.js (full mode).
 
-## API Docs (TODO)
+## API Docs (WIP)
 
 * Proxies
 * Service factories
