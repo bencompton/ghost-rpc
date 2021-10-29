@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { routerReducer, routerMiddleware, startListener } from 'redux-first-routing';
-import * as history from 'history';
+import createBrowserHistory from 'history/createBrowserHistory';
 
 import productSearchReducer, { IProductSearchState } from './reducers/ProductSearchReducer';
 import cartReducer, { ICartState } from './reducers/CartReducer';
@@ -14,7 +14,7 @@ export interface IAppState {
 }
 
 export const getStore = () => {
-  const memoryHistory = history.createMemoryHistory();
+  const memoryHistory = createBrowserHistory();
 
   const store = createStore(
     combineReducers<IAppState>({

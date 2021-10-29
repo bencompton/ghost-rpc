@@ -35,7 +35,7 @@ Next, run `npm install`. Note that this project's root `package.json` is a centr
 
 ### Running the full stack in the browser (mock mode)
 
-To try out mock mode in the browser, run `npm run dev-with-mocks` from the root `shopping-cart-app` directory. [Vite](https://vitejs.dev/) will expose the demo app on `localhost:3000`, and you should be able to launch and run the app in a browser.
+To try out mock mode in the browser, run `npm run dev` from the root `shopping-cart-app` directory. [Vite](https://vitejs.dev/) will expose the demo app on `localhost:3000`, and launch the app in your default browser. Note that development mode uses dynamic imports to load either the full or mock mode bundle, so there will be a short delay when the app starts that won't be present in the final production build.
 
 With Ghost RPC, the idea is that as much of your full-stack development as possible happens in the browser. This typically enhances developer productivity because an entire dev environment can be launched with one command rather than going through an involved set of steps to run your back-end locally. Running the full stack in the browser lets you leverage in-browser dev tools for the full stack, as well as productivity-enhancing build tooling like HMR. For example, in this demo, try changing one of the the TypeScript database schema definitions, let Vite build your changes, then refresh the browser and you'll see your schema change will be available right away!
 
@@ -47,7 +47,7 @@ To query the in-memory SQL.js DB, launch the browser dev tools and run `db.query
 
 While running the full stack in the browser is convenient for development, the ability to run the back-end outside of the browser in Node.js is important for production, test environments, and debugging back-end issues that aren't reproducible in mock mode.
 
-To spin up the front-end in Vite and the back-end in Node.js, run `npm run dev-full`, and then launch the app in the browser at `http://localhost:3000` (just like with mock mode). In full mode, this will expose the front-end in Vite's dev server on `localhost:3000`, launch Node.js exposing the Ghost RPC services via Fastify on `localhost:8080`, and configure Vite's proxy to forward HTTP requests to Ghost RPC from the front-end Vite dev server on `localhost:3000` to Node.js on `localhost:8080`.
+To spin up the front-end in Vite and the back-end in Node.js, run `npm run dev-full`, and then the app will launch shortly in your default browser. In full mode, this will expose the front-end in Vite's dev server on `localhost:3000`, launch Node.js exposing the Ghost RPC services via Fastify on `localhost:8080`, and configure Vite's proxy to forward HTTP requests to Ghost RPC from the front-end Vite dev server on `localhost:3000` to Node.js on `localhost:8080`.
 
 For simplicty, Node.js is also using SQL.js with mock data in this demo, although in the real world, you would typically dependency inject a different TypeORM DBMS connection into your repositories for "full mode" (e.g., MySQL, PostgreSQL). If you're using TypeORM, the same schema definitions can be used for both SQL.js and your full DBMS. For relational databases, it is suggested that you use native column type annotations to ensure optimal use of your full DBMS, which will be ignored with SQL.js if they're not supported (e.g., TINYINT for MySQL would fall back to SQLite's INTEGER column type).
 
