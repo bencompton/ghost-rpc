@@ -35,7 +35,7 @@ Next, run `npm install`. Note that this project's root `package.json` is a centr
 
 ### Running the full stack in the browser (mock mode)
 
-To try out mock mode in the browser, run `npm run dev` from the root `shopping-cart-app` directory. [Vite](https://vitejs.dev/) will expose the demo app on `localhost:3000`, and launch the app in your default browser. Note that development mode uses dynamic imports to load either the full or mock mode bundle, so there will be a short delay when the app starts that won't be present in the final production build.
+To try out mock mode in the browser, run `npm run dev` from the root `shopping-cart-app` directory. [Vite](https://vitejs.dev/) will expose the demo app on `localhost:3000`, and launch the app in your default browser.
 
 With Ghost RPC, the idea is that as much of your full-stack development as possible happens in the browser. This typically enhances developer productivity because an entire dev environment can be launched with one command rather than going through an involved set of steps to run your back-end locally. Running the full stack in the browser lets you leverage in-browser dev tools for the full stack, as well as productivity-enhancing build tooling like HMR. For example, in this demo, try changing one of the the TypeScript database schema definitions, let Vite build your changes, then refresh the browser and you'll see your schema change will be available right away!
 
