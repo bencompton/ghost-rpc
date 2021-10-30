@@ -1,4 +1,6 @@
-# Benchmark with Ghost RPC Fastify vs. Plain Fastify
+# Benchmark: Ghost RPC Fastify vs. Plain Fastify
+
+## Overview
 
 This benchmark leverages the `productSearchService.getFeaturedProducts` service operation from the Shopping Cart App example, pitting this operation being called from a plain Fastify HTTP endpoint against calling it from a Ghost RPC Fastify endpoint.
 
@@ -17,6 +19,8 @@ npm start
 These results were obtained by running this benchmark in Git Bash on a Windows 10 machine with an Intel Core i7-8850H CPU and 32GB of RAM. With 10 connections, Ghost RPC running in Fastify had 1.2x higher average latency per request than Fastify alone and yielded 10% fewer requests per second. With 100 connections, Ghost RPC had 1.03x higher latency than plain Fastify, with 5% fewer requests per second.
 
 Above 100 connections, a lot of the requests appeared to time out with both plain Fastify and Ghost RPC, which would likely be mitigated by running more than one autocannon worker in this benchmark. The results with > 100 connections are not particularly valid, and are therefore omitted here.
+
+### 10 Connections
 
 ```bash
 Running benchmark for "Ghost RPC - 10 connections"
@@ -67,6 +71,8 @@ Req/Bytes counts sampled once per second.
 
 188k requests in 60.05s, 68.7 MB read
 ```
+
+### 100 Connections
 
 ```bash
 Running benchmark for "Ghost RPC - 100 connections"
