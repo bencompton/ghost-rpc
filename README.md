@@ -8,6 +8,20 @@ Ghost RPC is designed for extreme productivity, testability, and minimal boilerp
 
 While RESTful semantics are useful for creating standards-based APIs that can be exposed to various consumers, when the only goal is to invoke some code on the back-end (e.g., from a React SPA), and your API is only called from your front-end, RESTful semantics are overkill. In this case, a lot of time and energy is wasted adhering to HTTP semantics, like using the correct verb, HTTP status code, etc., and this additional effort yields little benefit. Ghost RPC is a productive alternative to Node.js RESTful APIs.
 
+## Installation
+
+Ghost RPC:
+
+```bash
+npm install ghost-rpc
+```
+
+Fastify plug-in:
+
+```
+npm install ghost-rpc-fastify
+```
+
 ## Ghost RPC in Action
 
 Let's assume your app has the following service classes that comprise your back-end API:
