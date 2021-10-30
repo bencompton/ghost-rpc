@@ -1,5 +1,4 @@
 <p align="center"><img src="./assets/infographic.png" alt="Ghost RPC Logo" /></p>
----
 
 ## Overview
 
