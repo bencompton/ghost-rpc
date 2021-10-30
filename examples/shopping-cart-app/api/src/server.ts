@@ -21,9 +21,6 @@ const start = async () => {
     (request, globalRequestParams, next) => preRequestHook(globalRequestParams, next)
   );
 
-  const blah = { } as PreRequestHook;
-  const requestHook: FastifyMiddlewarePreRequestHook = blah;
-
   server.register(ghostRpcMiddleware);
 
   try {
