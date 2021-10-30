@@ -9,7 +9,7 @@ export const getConnection = async () => {
     name: `connection-${uuidv4()}`,
     autoSave: false,
     entities: Object.keys(entities).map((entity: string) => (entities as any)[entity]),
-    logging: ['query', 'schema'],
+    logging: [],
     synchronize: true
   });
 

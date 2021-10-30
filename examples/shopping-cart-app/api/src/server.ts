@@ -23,7 +23,7 @@ const start = async () => {
   server.register(ghostRpcMiddleware);
 
   try {
-    await server.listen(8080, '0.0.0.0');
+    await server.listen('8080', '0.0.0.0');
   } catch (err) {
     server.log.error(err);
     process.exit(1);

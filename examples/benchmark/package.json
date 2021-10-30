@@ -1,0 +1,24 @@
+{
+  "name": "fastify-vs-ghost-rpc-benchmark",
+  "version": "1.0.0",
+  "description": "Fastify vs. Ghost RPC benchmark",
+  "main": "dist/benchmark/run-benchmark.js",
+  "scripts": {
+    "build": "rm -rf ./dist/ && tsc --incremental",
+    "start": "npm run build && node ./dist/benchmark/run-benchmark.js"
+  },
+  "devDependencies": {
+    "@types/node": "^15.14.9",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "@types/autocannon": "^4.1.1",
+    "autocannon": "^7.5.0",
+    "fastify": "^3.17.0",
+    "ghost-rpc": "../../ghost-rpc/",
+    "ghost-rpc-fastify": "../../ghost-rpc-fastify/",
+    "sql.js": "^1.6.2",
+    "typeorm": "^0.2.38",
+    "uuid": "^8.3.2"
+  }
+}
