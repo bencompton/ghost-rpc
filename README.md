@@ -1,5 +1,6 @@
 <p align="center"><img width="200" src="./assets/ghost-rpc-logo.png" alt="Ghost RPC Logo" /></p>
 
+<p align="center"><img width="200" src="./assets/ghost-rpc-diagram.png" alt="Ghost RPC Logo" /></p>
 ---
 
 ## Overview
