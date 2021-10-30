@@ -8,10 +8,6 @@
     "copy-ui": "rm -rf ./dist/ui/ && cp -r ../ui/dist/ ./dist/ui/",
     "start": "npm run build && node ./dist/api/src/server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.cerner.com/ExtendedCareLTC/caretracker"
-  },
   "devDependencies": {
     "@types/node": "^15.12.2",
     "typescript": "^4.0.5"
