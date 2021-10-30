@@ -1,10 +1,10 @@
-<p align="center"><img src="./assets/infographic.png" alt="Ghost RPC Logo" /></p>
+<img src="./assets/infographic.png" alt="Ghost RPC Logo" />
 
 ## Overview
 
-The primary use case for Ghost RPC is to allow you to develop the full stack in the browser with mock data, create fast and stable full-stack integration tests with the same mock data, and then run your back-end in Node.js everywhere else, all with minimal effort.
+The primary use case for Ghost RPC is to allow you to develop the full stack in the browser with mock data, create fast and stable full-stack integration tests with the same mock data, and then run your back-end in Node.js everywhere else, all with minimum effort and maximum re-use.
 
-Ghost RPC is designed for extreme productivity, testability, and minimal boilerplate for browser-based front-ends with Node.js back-ends. Ghost RPC leverages JavaScript proxies and provides a fluent TypeScript / JavaScript API to allow you to define and invoke your services and create highly testable apps with with minimal wasted effort.
+Ghost RPC is designed for extreme productivity, testability, and minimal boilerplate for browser-based front-ends with Node.js back-ends. Ghost RPC leverages JavaScript proxies and provides a fluent TypeScript / JavaScript API to allow you to define and invoke your services and create highly testable apps with minimal wasted effort.
 
 While RESTful semantics are useful for creating standards-based APIs that can be exposed to various consumers, when the only goal is to invoke some code on the back-end (e.g., from a React SPA), and your API is only called from your front-end, RESTful semantics are overkill. In this case, a lot of time and energy is wasted adhering to HTTP semantics, like using the correct verb, HTTP status code, etc., and this additional effort yields little benefit. Ghost RPC is a productive alternative to Node.js RESTful APIs.
 
