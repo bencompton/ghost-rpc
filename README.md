@@ -1,4 +1,6 @@
-# Ghost RPC
+<p align="center"><img width="200" src="./assets/ghost-rpc-logo.png" alt="Ghost RPC Logo" /></p>
+
+---
 
 ## Overview
 
