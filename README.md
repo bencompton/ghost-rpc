@@ -1,9 +1,8 @@
 <p align="center"><img width="200" src="./assets/ghost-rpc-logo.png" alt="Ghost RPC Logo" /></p>
 
-<p align="center"><img width="200" src="./assets/ghost-rpc-diagram.png" alt="Ghost RPC Logo" /></p>
----
-
 ## Overview
+
+<p align="center"><img width="500" src="./assets/ghost-rpc-diagram.png" alt="Ghost RPC Logo" /></p>
 
 The primary use case for Ghost RPC is to allow you to develop the full stack in the browser with mock data, create fast and stable full-stack integration tests with the same mock data, and then run your back-end in Node.js everywhere else, all with minimal effort.
 
