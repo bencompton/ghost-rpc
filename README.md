@@ -110,6 +110,8 @@ console.log(sum); // 4
 
 * [Shopping Cart App](./examples/shopping-cart-app) - A demo showcasing Ghost RPC with React, Redux and TypeORM + SQL.js. The same service classes, database schema, data access logic, and front-end Redux state management logic are exercised from integration tests, the full stack running in the browser (mock mode), and the stack separated between the browser and Node.js (full mode).
 
+* [Benchmark](./examples/benchmark) - Compares the performance of Ghost RPC Fastify to plain Fastify
+
 ## API Docs (WIP)
 
 * Proxies
@@ -124,4 +126,5 @@ console.log(sum); // 4
 * Additional transport handlers (e.g, binary instead of HTTP + JSON)
 * Middleware plug-ins for auth, etc. with the ability to use decorators to apply middleware per service class / method
 * Support for other Node.js frameworks (e.g., Express, Hapi)
+* Ability to run as a stand-alone server with no need for Fastify, Express, etc.
 * Deno support
