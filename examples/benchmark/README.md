@@ -18,7 +18,7 @@ npm start
 
 These results were obtained by running this benchmark in Git Bash on a Windows 10 machine with an Intel Core i7-8850H CPU and 32GB of RAM. With 10 connections, Ghost RPC running in Fastify had **1.2x higher average latency** per request than Fastify alone and yielded **10% fewer requests per second**. With 100 connections, Ghost RPC had **1.03x higher latency** than plain Fastify, with **5% fewer requests per second**.
 
-Above 100 connections, a lot of the requests appeared to time out with both plain Fastify and Ghost RPC, which would likely be mitigated by running more than one autocannon worker in this benchmark. The results with > 100 connections are not particularly valid, and are therefore omitted here.
+Above 100 connections, a lot of the requests appeared to time out with both plain Fastify and Ghost RPC, which would likely be mitigated by running more than one [autocannon worker](https://github.com/mcollina/autocannon#workers) in this benchmark. The results with > 100 connections are not particularly valid, and are therefore omitted here.
 
 ### 10 Connections
 
