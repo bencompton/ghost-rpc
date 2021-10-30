@@ -96,11 +96,11 @@ Running 60s test @ http://localhost:8080
 Req/Bytes counts sampled once per second.
 
 171k requests in 60.6s, 67.4 MB read
+
+Benchmark "Ghost RPC - 100 connections" complete
 ```
 
 ```bash
-Benchmark "Ghost RPC - 100 connections" complete
-
 Running benchmark for "Fastify - 100 connections"
 
 Running 60s test @ http://localhost:8080/featured-products
