@@ -142,3 +142,4 @@ console.log(sum); // 4
 * Support for other Node.js frameworks (e.g., Express, Hapi)
 * Ability to run as a stand-alone server with no need for Fastify, Express, etc.
 * Deno support
+* Possibly support FaaS deployments (e.g., AWS Lambda)
