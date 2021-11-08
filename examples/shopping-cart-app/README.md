@@ -18,7 +18,7 @@ This project is organized into the following directories:
 
 * `specs` - Feature files, step definitions, and workflow classes for this project's [Jest Cucumber](https://github.com/bencompton/jest-cucumber/) integration tests go here. The integration tests exercise the full stack in the same manner as running the full stack in the browser with mock mode.
 
-For a more detailed explanation of many of the concepts behind this example, please see the(Front-End First Development Tutorial)[https://github.com/bencompton/frontend-first-development-tutorial/blob/master/integration-tests.md]. This tutorial covers building a simple shopping cart app with [I/O Source](https://github.com/bencompton/io-source) mock REST services rather than running the full stack in the browser / integration tests with Ghost RPC, but the main concepts are the same.
+For a more detailed explanation of many of the concepts behind this example, please see the [Front-End First Development Tutorial](https://github.com/bencompton/frontend-first-development-tutorial/blob/master/integration-tests.md). This tutorial covers building a simple shopping cart app with [I/O Source](https://github.com/bencompton/io-source) mock REST services rather than running the full stack in the browser / integration tests with Ghost RPC, but the main concepts are the same.
 
 ## Quick Start
 
