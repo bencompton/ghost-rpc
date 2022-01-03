@@ -19,9 +19,10 @@ const getTestSetup = () => {
   const databaseConnection = new DatabaseConnectionFactory(getConnection, true);
 
   const handler = createLocalHandler<IAppServiceConstructionParams, null>(
-    servicesFactory, 
-    createGhostRpcHandlerPreRequestHook(databaseConnection)
+    servicesFactory
   );
+
+  handler.use(createGhostRpcHandlerPreRequestHook(databaseConnection));
 
   const services = createProxy<IAppServices>(handler)
   const store = getStore();

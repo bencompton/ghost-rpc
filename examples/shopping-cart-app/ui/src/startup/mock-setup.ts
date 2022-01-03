@@ -21,9 +21,10 @@ export const initMock = async () => {
   (window as any).db = await databaseConnection.getConnection();
 
   const handler = createLocalHandler<IAppServiceConstructionParams, null>(
-    servicesFactory, 
-    createGhostRpcHandlerPreRequestHook(databaseConnection)
+    servicesFactory
   );
+
+  handler.use(createGhostRpcHandlerPreRequestHook(databaseConnection));
   
   const ghostRpcServices = createProxy<IAppServices>(handler);
   const store = getStore();

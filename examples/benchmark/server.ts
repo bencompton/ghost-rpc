@@ -30,7 +30,7 @@ const setupGhostRpcEndpoint = async (server: FastifyInstance) => {
   const ghostRpcMiddleware = createFastifyMiddleware(
     '/api/',
     servicesFactory,
-    (request, globalRequestParams, next) => preRequestHook(globalRequestParams, next)
+    (request: any, globalRequestParams: any, next: any) => preRequestHook(globalRequestParams)
   );
 
   server.register(ghostRpcMiddleware);  
