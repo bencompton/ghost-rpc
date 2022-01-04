@@ -1,6 +1,6 @@
 import { ServicesFactory } from '.';
 import { ProxyTransportHandler } from './create-proxy';
-import { RequestHookRegistration, Next, RequestHook, RequestHookResult } from './pre-request-hook';
+import { RequestHookRegistration, Next, RequestHook, RequestHookResult } from './request-hook';
 import serviceExecutor from './service-executor';
 
 export type LocalHandlerRequestHook<GlobalRequestParamsType> =

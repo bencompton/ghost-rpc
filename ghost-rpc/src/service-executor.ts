@@ -1,5 +1,5 @@
 import { ServiceFactory, ServicesFactory } from '.';
-import { RequestHook, RequestHookResult } from './pre-request-hook';
+import { RequestHook, RequestHookResult } from './request-hook';
 
 export type ServiceExecutionResultStatus =
   'serviceNotFound'

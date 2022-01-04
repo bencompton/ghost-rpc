@@ -3,7 +3,7 @@ import createHttpTransportHandler from './create-http-transport-handler';
 import createLocalHandler from './create-local-handler';
 import type { IServiceExecutionResult } from './service-executor';
 import { RpcProxyError } from './rpc-proxy-error';
-import { RequestHook, RequestHookResult } from './pre-request-hook';
+import { RequestHook, RequestHookResult } from './request-hook';
 
 export type ServiceProxy<Type> = {
   [Property in keyof Type]: Type[Property] extends (...args: any[]) => Promise<any> ? 
