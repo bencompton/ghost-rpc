@@ -13,7 +13,7 @@ describe('Request Hooks', () => {
 
   describe('When I add two request Hooks and invoke a service', () => {
     describe('When I call next() from the first Request Hook', () => {
-      it('should invoke the first Request Hook and return its Service Execution Result payload');
+      it('should invoke the second Request Hook and return its Service Execution Result payload');
     });
 
     describe('When I call next() from the second Request Hook', () => {
