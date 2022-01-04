@@ -8,11 +8,23 @@
   "scripts": {
     "build-es5": "tsc --module CommonJS --target es5 --outDir dist/es5/",
     "build-esnext": "tsc --module ES2020 --target ES2018 --outDir dist/esnext/",
-    "build": "npm run build-es5 && npm run build-esnext"
+    "build": "npm run build-es5 && npm run build-esnext",
+    "test": "jest --verbose"
   },
   "author": "Ben Compton",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "jest": "^27.4.5",
+    "ts-jest": "^27.1.2",
     "typescript": "^4.3.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testMatch": [
+      "**/*.spec.ts"
+    ]
   }
 }
