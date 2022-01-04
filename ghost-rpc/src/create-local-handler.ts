@@ -1,17 +1,17 @@
 import { ServicesFactory } from '.';
 import { ProxyTransportHandler } from './create-proxy';
-import { MiddlewareRegistration, Next, PreRequestHook, PreRequestHookCallback, PreRequestHookResult } from './pre-request-hook';
+import { RequestHookRegistration, Next, RequestHook, RequestHookResult } from './pre-request-hook';
 import serviceExecutor from './service-executor';
 
-export type LocalHandlerPreRequestHook<GlobalRequestParamsType> =
-  (globalRequestParams: GlobalRequestParamsType | null, next: Next) => Promise<PreRequestHookResult>;
+export type LocalHandlerRequestHook<GlobalRequestParamsType> =
+  (globalRequestParams: GlobalRequestParamsType | null, next: Next) => Promise<RequestHookResult>;
 
-export interface ProxyTransportHandlerWithMiddlewareRegistration extends ProxyTransportHandler, MiddlewareRegistration { }
+export interface ProxyTransportHandlerWithMiddlewareRegistration extends ProxyTransportHandler, RequestHookRegistration { }
 
 export default <ConstructionParams, GlobalRequestParams>(
   servicesFactory: ServicesFactory<any, ConstructionParams>
 ): ProxyTransportHandlerWithMiddlewareRegistration => {
-  const preRequestHooks: PreRequestHook[] = [];
+  const requestHooks: RequestHook[] = [];
   const localHandler: ProxyTransportHandler = (
     serviceName: string,
     methodName: string,
@@ -29,14 +29,14 @@ export default <ConstructionParams, GlobalRequestParams>(
       methodName,
       methodArgs,
       globalRequestParams,
-      preRequestHooks
+      requestHooks
     );
   };
 
   const localHandlerWithMiddleware = localHandler as ProxyTransportHandlerWithMiddlewareRegistration;
 
-  localHandlerWithMiddleware.use = (preRequestHook: PreRequestHook) => {
-    preRequestHooks.push(preRequestHook);
+  localHandlerWithMiddleware.use = (requestHook: RequestHook) => {
+    requestHooks.push(requestHook);
 
     return localHandlerWithMiddleware;
   };

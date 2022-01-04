@@ -1,5 +1,5 @@
 import { ServiceFactory, ServicesFactory } from '.';
-import { PreRequestHook, PreRequestHookResult } from './pre-request-hook';
+import { RequestHook, RequestHookResult } from './pre-request-hook';
 
 export type ServiceExecutionResultStatus =
   'serviceNotFound'
@@ -82,12 +82,8 @@ export default async <ConstructionParams>(
   methodName: string,
   methodArguments: any[],
   globalRequestParams: any,
-  preRequestHooks: Array<PreRequestHook> | null = null
+  requestHooks: Array<RequestHook> | null = null
 ): Promise<IServiceExecutionResult> => {
-  let preRequestHookResult: PreRequestHookResult
-    | Promise<PreRequestHookResult>
-    | undefined = undefined;
-
   const serviceFactory = servicesFactory[serviceName];
 
   if (!serviceFactory || typeof serviceFactory !== 'function') {
@@ -97,7 +93,7 @@ export default async <ConstructionParams>(
     };
   }
 
-  if (preRequestHooks) {
+  if (requestHooks) {
     let prevIndex = -1;
 
     const handler = async (index: number, context: any): Promise<void | any> => {
@@ -105,11 +101,11 @@ export default async <ConstructionParams>(
         throw new Error("next() already called.");
       }
 
-      if (index === preRequestHooks.length) return context;
+      if (index === requestHooks.length) return context;
 
       prevIndex = index;
 
-      const middleware = preRequestHooks[index];
+      const middleware = requestHooks[index];
 
       if (middleware) {
         await middleware(context,() => handler(index + 1, context));
@@ -136,25 +132,6 @@ export default async <ConstructionParams>(
 
       throw error;
     }
-
-    // preRequestHookResult = await preRequestHooks(globalRequestParams, (constructionParams) => {
-
-    // });
-
-    // if (preRequestHookResult) {
-    //   if ((preRequestHookResult as PreRequestHookResult).serviceExecutionResult) {
-    //     const serviceExecutionResult = preRequestHookResult.serviceExecutionResult as IServiceExecutionResult;
-
-    //     return {
-    //       ...serviceExecutionResult,
-    //       globalResponseParams: preRequestHookResult.globalResponseParams
-    //     }
-    //   } else {
-    //     throw new Error('Pre-request hook returned no service execution result');
-    //   }
-    // } else {
-    //   throw new Error('Pre-request hook returned nothing');
-    // }
   } else {
     return invokeService(
       serviceName,

@@ -4,24 +4,24 @@ import { FastifyPluginCallback, FastifyRequest } from 'fastify';
 import { Reviver } from '../../ghost-rpc/src/json-parse-reviver';
 import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
 import { ISerializer } from '../../ghost-rpc/src/serializer';
-import { PreRequestHook, PreRequestHookResult } from '../../ghost-rpc/src/pre-request-hook';
+import { RequestHook, RequestHookResult } from '../../ghost-rpc/src/pre-request-hook';
 import { ServicesFactory } from '../../ghost-rpc/src';
 
-export type FastifyMiddlewarePreRequestHookResult =
-  PreRequestHookResult & {
+export type FastifyMiddlewareRequestHookResult =
+  RequestHookResult & {
     headers?: Headers;
   };
 
-export type FastifyMiddlewarePreRequestHook =
+export type FastifyMiddlewareRequestHook =
   (
     request: FastifyRequest,
     globalRequestParams: any
-  ) => Promise<FastifyMiddlewarePreRequestHookResult>
+  ) => Promise<FastifyMiddlewareRequestHookResult>
 
 export const createFastifyMiddleware = <ConstructionParams>(
   basePath: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  preRequestHook?: FastifyMiddlewarePreRequestHook,
+  requestHook?: FastifyMiddlewareRequestHook,
   serializer: ISerializer = JSON,
   reviver?: Reviver
 ): FastifyPluginCallback => {
@@ -40,10 +40,10 @@ export const createFastifyMiddleware = <ConstructionParams>(
         const serviceName: string = params.serviceName;
         const methodName: string = params.methodName;
 
-        let wrappedPreRequestHooks: PreRequestHook[] = [];
+        let wrappedRequestHooks: RequestHook[] = [];
 
-        if (preRequestHook) {
-          wrappedPreRequestHooks.push(async (globalRequestParams: any | null) => {
+        if (requestHook) {
+          wrappedRequestHooks.push(async (globalRequestParams: any | null) => {
             // let fastifyPreRequestHookResult = await preRequestHook(request, globalRequestParams);
             const requestHeaders = request.headers;
             // if (request.headers) {
@@ -70,7 +70,7 @@ export const createFastifyMiddleware = <ConstructionParams>(
           serviceName,
           methodName,
           servicesFactory,
-          wrappedPreRequestHooks,
+          wrappedRequestHooks,
           serializer,
           reviver
         );

@@ -1,16 +1,13 @@
 import { IServiceExecutionResult } from "./service-executor";
 
-export type Next = () => Promise<any> | any;
+export type Next = (constructionParams?: any) => Promise<RequestHookResult>;
 
-export type MiddlewareRegistration =  {
-  use(preRequestHook: PreRequestHook): MiddlewareRegistration;
+export type RequestHookRegistration =  {
+  use(requestHook: RequestHook): RequestHookRegistration;
 }
 
-export type PreRequestHookResult = {
-  context: any,
-  repositories: any
+export type RequestHookResult = {
+  executionResult: IServiceExecutionResult;
 }
 
-export type PreRequestHookCallback = (constructionParams: any) => Promise<IServiceExecutionResult>;
-
-export type PreRequestHook = (globalRequestParams: any, next: Next) => Promise<any>;
+export type RequestHook = (globalRequestParams: any, next: Next) => Promise<any>;

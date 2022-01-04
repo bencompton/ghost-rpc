@@ -10,7 +10,7 @@ import { getConnection } from '../common-library/database/browser-sql-js';
 import { renderApp } from '../app/components/App';
 import { getActions } from '../app/actions';
 import { getStore } from '../app/store';
-import createGhostRpcHandlerPreRequestHook from '../../../shared/create-ghost-rpc-prerequest-hook';
+import createGhostRpcHandlerRequestHook from '../../../shared/create-ghost-rpc-prerequest-hook';
 import DatabaseConnectionFactory from '../../../database/connections/connection-factory';
 
 export const initMock = async () => {
@@ -24,7 +24,7 @@ export const initMock = async () => {
     servicesFactory
   );
 
-  handler.use(createGhostRpcHandlerPreRequestHook(databaseConnection));
+  handler.use(createGhostRpcHandlerRequestHook(databaseConnection));
   
   const ghostRpcServices = createProxy<IAppServices>(handler);
   const store = getStore();

@@ -1,4 +1,4 @@
-import { ServicesFactory, PreRequestHook } from '.';
+import { ServicesFactory, RequestHook } from '.';
 import { dateReviver, Reviver } from './json-parse-reviver';
 import { ISerializer } from './serializer';
 import serviceExecutor, { IServiceExecutionResult } from './service-executor';
@@ -8,7 +8,7 @@ export default async <ConstructionParams>(
   serviceName: string,
   methodName: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  wrappedPreRequestHooks: PreRequestHook[] | null = null,
+  wrappedRequestHooks: RequestHook[] | null = null,
   serializer: ISerializer = JSON,
   reviver?: Reviver  
 ) => {
@@ -23,7 +23,7 @@ export default async <ConstructionParams>(
     methodName,
     methodArguments,
     globalRequestParams,
-    wrappedPreRequestHooks
+    wrappedRequestHooks
   );
 
   let statusCode: number;
