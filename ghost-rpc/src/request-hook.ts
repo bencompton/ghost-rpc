@@ -1,13 +1,13 @@
 import { IServiceExecutionResult } from "./service-executor";
 
-export type Next = (constructionParams?: any) => Promise<RequestHookResult>;
+export type Next<TConstructionParams> = (constructionParams?: TConstructionParams) => Promise<RequestHookResult>;
 
 export type RequestHookRegistration =  {
-  use(requestHook: RequestHook): RequestHookRegistration;
+  use(requestHook: RequestHook<any, any>): RequestHookRegistration;
 }
 
 export type RequestHookResult = {
   executionResult: IServiceExecutionResult;
 }
 
-export type RequestHook = (globalRequestParams: any, next: Next) => Promise<any>;
+export type RequestHook<TGlobalRequestParams, TConstructionParams> = (globalRequestParams: TGlobalRequestParams, next: Next<TConstructionParams>) => Promise<RequestHookResult>;

@@ -3,15 +3,12 @@ import { ProxyTransportHandler } from './create-proxy';
 import { RequestHookRegistration, Next, RequestHook, RequestHookResult } from './request-hook';
 import serviceExecutor from './service-executor';
 
-export type LocalHandlerRequestHook<GlobalRequestParamsType> =
-  (globalRequestParams: GlobalRequestParamsType | null, next: Next) => Promise<RequestHookResult>;
-
 export interface ProxyTransportHandlerWithMiddlewareRegistration extends ProxyTransportHandler, RequestHookRegistration { }
 
 export default <ConstructionParams, GlobalRequestParams>(
   servicesFactory: ServicesFactory<any, ConstructionParams>
 ): ProxyTransportHandlerWithMiddlewareRegistration => {
-  const requestHooks: RequestHook[] = [];
+  const requestHooks: RequestHook<any, any>[] = [];
   const localHandler: ProxyTransportHandler = (
     serviceName: string,
     methodName: string,
@@ -35,7 +32,7 @@ export default <ConstructionParams, GlobalRequestParams>(
 
   const localHandlerWithMiddleware = localHandler as ProxyTransportHandlerWithMiddlewareRegistration;
 
-  localHandlerWithMiddleware.use = (requestHook: RequestHook) => {
+  localHandlerWithMiddleware.use = (requestHook: RequestHook<any, any>) => {
     requestHooks.push(requestHook);
 
     return localHandlerWithMiddleware;

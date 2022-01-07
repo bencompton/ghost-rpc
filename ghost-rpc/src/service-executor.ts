@@ -82,7 +82,7 @@ export default async <ConstructionParams>(
   methodName: string,
   methodArguments: any[],
   globalRequestParams: any,
-  requestHooks: Array<RequestHook> | null = null
+  requestHooks: Array<RequestHook<any, any>> | null = null
 ): Promise<IServiceExecutionResult> => {
   const serviceFactory = servicesFactory[serviceName];
 
@@ -96,42 +96,33 @@ export default async <ConstructionParams>(
   if (requestHooks) {
     let prevIndex = -1;
 
-    const handler = async (index: number, context: any): Promise<void | any> => {
+    const hookHandler = async (index: number, context: any): Promise<any> => {
       if (index === prevIndex) {
         throw new Error("next() already called.");
       }
 
-      if (index === requestHooks.length) return context;
+      if (index === requestHooks.length) {
+        const serviceExecutionResult = await invokeService<ConstructionParams>(
+          serviceName,
+          methodName,
+          serviceFactory,
+          methodArguments,
+          context
+        ) as IServiceExecutionResult;
+    
+        return serviceExecutionResult;
+      }
 
       prevIndex = index;
 
-      const middleware = requestHooks[index];
+      const requestHook = requestHooks[index];
 
-      if (middleware) {
-        await middleware(context,() => handler(index + 1, context));
+      if (requestHook) {
+        return await requestHook(context,async () => await hookHandler(index + 1, context));
       }
     };
 
-    try {
-      await handler(0, globalRequestParams);
-      const serviceExecutionResult = await invokeService<ConstructionParams>(
-        serviceName,
-        methodName,
-        serviceFactory,
-        methodArguments,
-        globalRequestParams
-      ) as IServiceExecutionResult;
-  
-
-      return {
-        ...serviceExecutionResult,
-        globalResponseParams: globalRequestParams
-      }
-    } catch (error) {
-      console.log(error);
-
-      throw error;
-    }
+    return await hookHandler(0, globalRequestParams);
   } else {
     return invokeService(
       serviceName,
