@@ -17,7 +17,7 @@ const start = async () => {
   const ghostRpcMiddleware = createFastifyMiddleware(
     '/api/',
     servicesFactory,
-    (_request: any, globalRequestParams: any) => requestHook(globalRequestParams)
+    (_request: any, globalRequestParams: any, next) => requestHook(globalRequestParams, next)
   );
 
   server.register(ghostRpcMiddleware);

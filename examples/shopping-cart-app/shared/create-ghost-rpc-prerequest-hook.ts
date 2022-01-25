@@ -3,10 +3,9 @@ import { RequestHook } from 'ghost-rpc';
 import { getRepositories } from './repositories';
 import { IAppServiceContext } from './services';
 import SqlJsConnectionManager from '../database/connections/connection-factory';
-import { Next } from 'ghost-rpc/dist/es5/src/pre-request-hook';
 
-export default (connectionManager: SqlJsConnectionManager): RequestHook => {
-  return async (globalRequestParams: any, next: Next) => {
+export default (connectionManager: SqlJsConnectionManager): RequestHook<any, any> => {
+  return async (globalRequestParams: any, next) => {
     const context: IAppServiceContext = {
       loggedInUserId: 1
     };
@@ -19,6 +18,6 @@ export default (connectionManager: SqlJsConnectionManager): RequestHook => {
     globalRequestParams.connection = connection;
     globalRequestParams.repositories = repositories;
 
-    next(globalRequestParams);
+    return await next(globalRequestParams);
   }
 };

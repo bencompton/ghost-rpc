@@ -4,8 +4,9 @@ import { FastifyPluginCallback, FastifyRequest } from 'fastify';
 import { Reviver } from '../../ghost-rpc/src/json-parse-reviver';
 import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
 import { ISerializer } from '../../ghost-rpc/src/serializer';
-import { RequestHook, RequestHookResult } from '../../ghost-rpc/src/pre-request-hook';
+
 import { ServicesFactory } from '../../ghost-rpc/src';
+import { Next, RequestHook, RequestHookResult } from '../../ghost-rpc/src/request-hook';
 
 export type FastifyMiddlewareRequestHookResult =
   RequestHookResult & {
@@ -15,7 +16,8 @@ export type FastifyMiddlewareRequestHookResult =
 export type FastifyMiddlewareRequestHook =
   (
     request: FastifyRequest,
-    globalRequestParams: any
+    globalRequestParams: any,
+    next: Next<any>
   ) => Promise<FastifyMiddlewareRequestHookResult>
 
 export const createFastifyMiddleware = <ConstructionParams>(
@@ -40,28 +42,19 @@ export const createFastifyMiddleware = <ConstructionParams>(
         const serviceName: string = params.serviceName;
         const methodName: string = params.methodName;
 
-        let wrappedRequestHooks: RequestHook[] = [];
+        let wrappedRequestHooks: RequestHook<undefined,ConstructionParams>[] = [];
 
         if (requestHook) {
-          wrappedRequestHooks.push(async (globalRequestParams: any | null) => {
-            // let fastifyPreRequestHookResult = await preRequestHook(request, globalRequestParams);
-            const requestHeaders = request.headers;
-            // if (request.headers) {
-            //   (request.headers).forEach((value, key) => {
-            //     reply.header(key, value);
-            //   });
-            // }
-            let returnHeaders = Object.keys(request.headers);
+          wrappedRequestHooks.push(async (globalRequestParams: any | null, next) => {
+            let fastifyHookResult = await requestHook(request, globalRequestParams, next);
 
-            returnHeaders.forEach((key) => {
-              reply.header(key, request.headers[key]);
-            });
+            if(fastifyHookResult.headers){
+              fastifyHookResult.headers.forEach((value: any, key: any) => {
+                reply.header(key, value);
+              });
+            }
 
-            return {
-              context: globalRequestParams.context,
-              repositories: globalRequestParams.repositories,
-              headers: returnHeaders
-            };
+            return fastifyHookResult;
           });
         }
 

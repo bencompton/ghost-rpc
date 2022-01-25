@@ -118,7 +118,7 @@ export default async <ConstructionParams>(
       const requestHook = requestHooks[index];
 
       if (requestHook) {
-        return await requestHook(context,async () => await hookHandler(index + 1, context));
+        return await requestHook(context,async (params) => await hookHandler(index + 1, params));
       }
     };
 

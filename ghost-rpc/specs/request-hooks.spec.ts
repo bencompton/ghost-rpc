@@ -54,6 +54,12 @@ describe('Request Hooks', () => {
       addResult = await servicesProxy.services.calculatorService.add(2,2);
     });
 
+    afterEach(() => {
+      hook1Spy.mockReset();
+      hook2Spy.mockReset();
+      serviceSpy.mockReset();
+    });
+
     describe('When I call next() from the first Request Hook', () => {
       it('should invoke the second Request Hook and return its Service Execution Result payload', async () => {
         const hook1Result = await hook1Spy.mock.results[0].value;
@@ -81,9 +87,11 @@ describe('Request Hooks', () => {
       servicesProxy.handler.use(testHooks.testHookMultipleNext);
     });
     it('should throw an error', async () => {
-      expect(await servicesProxy.services.calculatorService.add(2,2)).toThrowError();
+      await expect(servicesProxy.services.calculatorService.add(2,2)).rejects.toThrowError();
     });
   });
+
+
   describe('When I pass construction params into Next()', () => {
     it.todo('should pass those construction params into the service factory for the service being called')
   });
@@ -92,9 +100,51 @@ describe('Request Hooks', () => {
     it.todo('it should pass undefined for params in the service factory for the service being called')
   });
 
+  describe('When I have multiple Request Hooks and the first hook short circuits', () => {
+    const hook1Spy = jest.spyOn(testHooks, "shortCircuitHook");
+    const hook2Spy = jest.spyOn(testHooks, "genericTestHook1");
+    const serviceSpy = jest.spyOn(CalculatorService.prototype, "add");
+    
+    const serviceCall = async () => {
+      return await servicesProxy.services.calculatorService.add(2,2)
+    };
+    beforeEach(async() => {
+      servicesProxy.handler.use(testHooks.shortCircuitHook);
+      servicesProxy.handler.use(testHooks.genericTestHook1);
+    });
 
-  // Request hook doesnt return anything (null or undefined)
-  // Short circuit chain in request hook
-  // Test hook adding data to context
-  // Test global response params
+    afterEach(() => {
+      hook1Spy.mockReset();
+      hook2Spy.mockReset();
+      serviceSpy.mockReset();
+    });
+
+    it('should not invoke the second Request Hook', async () => {
+      await expect(serviceCall()).rejects.toThrowError();
+      expect(hook1Spy).toHaveBeenCalled();
+      expect(hook2Spy).toHaveBeenCalledTimes(0);
+    });
+
+    it('should not execute the requested service', () => {
+      expect(serviceSpy).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('When global response parameters are added to the execution result', () => {
+    const hook1Spy = jest.spyOn(testHooks, "genericTestHook1");
+
+    beforeEach(async () => {
+      servicesProxy = getServicesProxy();
+
+      servicesProxy.handler.use(testHooks.genericTestHook1);
+      servicesProxy.handler.use(testHooks.globalResponseHook);
+
+      await servicesProxy.services.calculatorService.add(2,2);
+    });
+    it('should return those response params up through the response pipeline', async () => {
+      const hook1Result = await hook1Spy.mock.results[0].value;
+      
+      expect(hook1Result.executionResult.globalResponseParams.testValue).toBe(500);
+    });
+  });
 });

@@ -8,7 +8,7 @@ export default async <ConstructionParams>(
   serviceName: string,
   methodName: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  wrappedRequestHooks: RequestHook[] | null = null,
+  wrappedRequestHooks: RequestHook<undefined, ConstructionParams>[] | null = null,
   serializer: ISerializer = JSON,
   reviver?: Reviver  
 ) => {
