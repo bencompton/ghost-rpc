@@ -64,13 +64,15 @@ const invokeService = async <ConstructionParams>(
 
         return {
           status: 'executionFailed',
-          error: executionFailedError
+          error: executionFailedError,
+          globalResponseParams: {}
         }
       }
 
       return {
         status: 'success',
-        result
+        result,
+        globalResponseParams: {}
       }
     }
   }
@@ -96,7 +98,7 @@ export default async <ConstructionParams>(
   if (requestHooks) {
     let prevIndex = -1;
 
-    const hookHandler = async (index: number, context: any): Promise<any> => {
+    const hookHandler = async (index: number, context: any): Promise<RequestHookResult> => {
       if (index === prevIndex) {
         throw new Error("next() already called.");
       }
@@ -109,26 +111,30 @@ export default async <ConstructionParams>(
           methodArguments,
           context
         ) as IServiceExecutionResult;
-    
-        return serviceExecutionResult;
+
+        return {
+          executionResult: serviceExecutionResult
+        } as RequestHookResult;
       }
 
       prevIndex = index;
 
       const requestHook = requestHooks[index];
 
-      if (requestHook) {
-        return await requestHook(context,async (params) => await hookHandler(index + 1, params));
-      }
+      return requestHook(context, async (params) => {
+        return await hookHandler(index + 1, params)
+      });
     };
 
-    return await hookHandler(0, globalRequestParams);
-  } else {
-    return invokeService(
-      serviceName,
-      methodName,
-      serviceFactory,
-      methodArguments
-    );
+    const hookResult = await hookHandler(0, globalRequestParams);
+
+    return hookResult.executionResult;
   }
+
+  return invokeService(
+    serviceName,
+    methodName,
+    serviceFactory,
+    methodArguments
+  );
 };
