@@ -10,6 +10,7 @@
     "jest": "^26.0.0",
     "jest-cucumber": "^3.0.1",
     "less": "^4.1.1",
+    "redux": "^4.0.0",
     "ts-jest": "^26.0.0",
     "typescript": "^4.4.4"
   },

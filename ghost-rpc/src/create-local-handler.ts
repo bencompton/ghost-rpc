@@ -1,29 +1,23 @@
 import { ServicesFactory } from '.';
 import { ProxyTransportHandler } from './create-proxy';
-import serviceExecutor, { PreRequestHook, PreRequestHookResult, PreRequestHookCallback } from './service-executor';
+import { RequestHookRegistration, Next, RequestHook, RequestHookResult } from './request-hook';
+import serviceExecutor from './service-executor';
 
-export type LocalHandlerPreRequestHook<GlobalRequestParamsType> = 
-  (globalRequestParams: GlobalRequestParamsType | null, next: PreRequestHookCallback) => Promise<PreRequestHookResult>;
+export interface ProxyTransportHandlerWithMiddlewareRegistration extends ProxyTransportHandler, RequestHookRegistration { }
 
 export default <ConstructionParams, GlobalRequestParams>(
-  servicesFactory: ServicesFactory<any, ConstructionParams>,
-  preRequestHook?: LocalHandlerPreRequestHook<GlobalRequestParams>
-): ProxyTransportHandler => {
-  return (
+  servicesFactory: ServicesFactory<any, ConstructionParams>
+): ProxyTransportHandlerWithMiddlewareRegistration => {
+  const requestHooks: RequestHook<any, any>[] = [];
+  const localHandler: ProxyTransportHandler = (
     serviceName: string,
     methodName: string,
     methodArgs: any[],
-    globalRequestParams: GlobalRequestParams | null
+    globalRequestParams: GlobalRequestParams | {}
   ) => {
-    let wrappedPreRequestHook: PreRequestHook | null = null;
-    
-    if (preRequestHook) {
-      wrappedPreRequestHook = (
-        globalRequestParams: GlobalRequestParams | null,
-        next: PreRequestHookCallback
-      ) => {
-        return preRequestHook(globalRequestParams, next);
-      };
+
+    if (globalRequestParams && globalRequestParams === null) {
+      globalRequestParams = {};
     }
 
     return serviceExecutor<ConstructionParams>(
@@ -32,7 +26,17 @@ export default <ConstructionParams, GlobalRequestParams>(
       methodName,
       methodArgs,
       globalRequestParams,
-      wrappedPreRequestHook
+      requestHooks
     );
   };
+
+  const localHandlerWithMiddleware = localHandler as ProxyTransportHandlerWithMiddlewareRegistration;
+
+  localHandlerWithMiddleware.use = (requestHook: RequestHook<any, any>) => {
+    requestHooks.push(requestHook);
+
+    return localHandlerWithMiddleware;
+  };
+
+  return localHandlerWithMiddleware;
 };

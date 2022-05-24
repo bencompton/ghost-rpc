@@ -1,4 +1,5 @@
 import { ServiceFactory, ServicesFactory } from '.';
+import { RequestHook, RequestHookResult } from './request-hook';
 
 export type ServiceExecutionResultStatus =
   'serviceNotFound'
@@ -15,16 +16,6 @@ export interface IServiceExecutionResult {
   globalResponseParams?: any;
 }
 
-export type PreRequestHookResult = {
-  serviceExecutionResult: IServiceExecutionResult;
-  globalResponseParams?: any;
-}
-
-export type PreRequestHookCallback = (constructionParams: any) => Promise<IServiceExecutionResult>;
-
-export type PreRequestHook =
-  (globalRequestParams: any, next: PreRequestHookCallback) => Promise<PreRequestHookResult>;
-
 const invokeService = async <ConstructionParams>(
   serviceName: string,
   methodName: string,
@@ -38,11 +29,11 @@ const invokeService = async <ConstructionParams>(
     return {
       status: 'serviceNotFound',
       error: { message: `Services factory provided no valid service for ${serviceName}`, stack: null }
-    };    
+    };
   } else {
     const method = service[methodName];
     let result: unknown = null;
-  
+
     if (!method) {
       return {
         status: 'methodNotFound',
@@ -56,7 +47,7 @@ const invokeService = async <ConstructionParams>(
     } else {
       try {
         const methodReturnValue = method.apply(service, methodArguments);
-  
+
         if ((methodReturnValue as PromiseLike<any>).then) {
           result = await methodReturnValue;
         } else {
@@ -73,13 +64,15 @@ const invokeService = async <ConstructionParams>(
 
         return {
           status: 'executionFailed',
-          error: executionFailedError
+          error: executionFailedError,
+          globalResponseParams: {}
         }
       }
 
       return {
         status: 'success',
-        result
+        result,
+        globalResponseParams: {}
       }
     }
   }
@@ -91,52 +84,57 @@ export default async <ConstructionParams>(
   methodName: string,
   methodArguments: any[],
   globalRequestParams: any,
-  preRequestHook: PreRequestHook | null = null
+  requestHooks: Array<RequestHook<any, any>> | null = null
 ): Promise<IServiceExecutionResult> => {
-  let preRequestHookResult: PreRequestHookResult 
-    | Promise<PreRequestHookResult> 
-    | undefined = undefined;
-
-  const serviceFactory = servicesFactory[serviceName];  
+  const serviceFactory = servicesFactory[serviceName];
 
   if (!serviceFactory || typeof serviceFactory !== 'function') {
     return {
       status: 'serviceNotFound',
       error: { message: `Services factory provided no instantiator for service type ${serviceName}`, stack: null }
     };
-  }    
+  }
 
-  if (preRequestHook) {
-    preRequestHookResult = await preRequestHook(globalRequestParams, (constructionParams) => {
-      return invokeService<ConstructionParams>(
-        serviceName,
-        methodName,
-        serviceFactory,
-        methodArguments,
-        constructionParams
-      );
-    });
-  
-    if (preRequestHookResult) {
-      if ((preRequestHookResult as PreRequestHookResult).serviceExecutionResult) {
-        const serviceExecutionResult = preRequestHookResult.serviceExecutionResult as IServiceExecutionResult;
+  if (requestHooks) {
+    let prevIndex = -1;
+
+    const hookHandler = async (index: number, context: any): Promise<RequestHookResult> => {
+      if (index === prevIndex) {
+        throw new Error("next() already called.");
+      }
+
+      if (index === requestHooks.length) {
+        const serviceExecutionResult = await invokeService<ConstructionParams>(
+          serviceName,
+          methodName,
+          serviceFactory,
+          methodArguments,
+          context
+        ) as IServiceExecutionResult;
 
         return {
-          ...serviceExecutionResult,
-          globalResponseParams: preRequestHookResult.globalResponseParams
-        }
-      } else {
-        throw new Error('Pre-request hook returned no service execution result');
+          executionResult: serviceExecutionResult
+        } as RequestHookResult;
       }
-    } else {
-      throw new Error('Pre-request hook returned nothing');
-    }
-  } else {
-    return invokeService(
-      serviceName,
-      methodName,
-      serviceFactory,
-      methodArguments
-    ); 
+
+      prevIndex = index;
+
+      const requestHook = requestHooks[index];
+
+      return requestHook(context, async (params) => {
+        return await hookHandler(index + 1, params)
+      });
+    };
+
+    const hookResult = await hookHandler(0, globalRequestParams);
+
+    return hookResult.executionResult;
   }
+
+  return invokeService(
+    serviceName,
+    methodName,
+    serviceFactory,
+    methodArguments
+  );
 };

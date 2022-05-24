@@ -7,7 +7,7 @@ import ProductSearchRepository from '../shopping-cart-app/shared/repositories/pr
 import ProductSearchService from '../shopping-cart-app/shared/services/product-search-service';
 
 import { servicesFactory } from '../shopping-cart-app/shared/services';
-import createGhostRpcHandlerPreRequestHook from '../shopping-cart-app/shared/create-ghost-rpc-prerequest-hook';
+import createGhostRpcHandlerRequestHook from '../shopping-cart-app/shared/create-ghost-rpc-prerequest-hook';
 import DatabaseConnectionFactory from '../shopping-cart-app/database/connections/connection-factory';
 
 const setupFastifyRestEndpoint = async (server: FastifyInstance) => {
@@ -25,12 +25,12 @@ const setupFastifyRestEndpoint = async (server: FastifyInstance) => {
 
 const setupGhostRpcEndpoint = async (server: FastifyInstance) => {
   const databaseConnection = new DatabaseConnectionFactory(getConnection, true);  
-  const preRequestHook = createGhostRpcHandlerPreRequestHook(databaseConnection);
+  const requestHook = createGhostRpcHandlerRequestHook(databaseConnection);
   
   const ghostRpcMiddleware = createFastifyMiddleware(
     '/api/',
     servicesFactory,
-    (request, globalRequestParams, next) => preRequestHook(globalRequestParams, next)
+    (request: any, globalRequestParams: any, next: any) => requestHook(globalRequestParams)
   );
 
   server.register(ghostRpcMiddleware);  

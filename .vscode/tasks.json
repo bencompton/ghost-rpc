@@ -4,7 +4,7 @@
 		{
 			"label": "Build API",
 			"type": "shell",
-			"command": "npm run build --prefix ./examples/shopping-cart-app/api/",
+			"command": "npm run build-ghost-rpc --prefix ./examples/shopping-cart-app && npm run build --prefix ./examples/shopping-cart-app/api/",
 			"group": "build",
 			"presentation": {
 			  "reveal": "always",

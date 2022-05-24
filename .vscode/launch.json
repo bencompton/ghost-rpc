@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Debug API",
-            //"preLaunchTask": "Build API",
+            // "preLaunchTask": "Build API",
             "program": "${workspaceFolder}/examples/shopping-cart-app/api/dist/api/src/server.js"
         }
     ]

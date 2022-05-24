@@ -1,32 +1,34 @@
 import { FastifyPluginCallback, FastifyRequest } from 'fastify';
 
-import { ServicesFactory } from '../../ghost-rpc/src';
+
 import { Reviver } from '../../ghost-rpc/src/json-parse-reviver';
-import { PreRequestHook, PreRequestHookCallback, PreRequestHookResult } from '../../ghost-rpc/src/service-executor';
 import httpRequestHandler from '../../ghost-rpc/src/http-request-handler';
 import { ISerializer } from '../../ghost-rpc/src/serializer';
 
-export type FastifyMiddlewarePreRequestHookResult = 
-  PreRequestHookResult & {
+import { ServicesFactory } from '../../ghost-rpc/src';
+import { Next, RequestHook, RequestHookResult } from '../../ghost-rpc/src/request-hook';
+
+export type FastifyMiddlewareRequestHookResult =
+  RequestHookResult & {
     headers?: Headers;
   };
 
-export type FastifyMiddlewarePreRequestHook =
+export type FastifyMiddlewareRequestHook =
   (
     request: FastifyRequest,
     globalRequestParams: any,
-    next: PreRequestHookCallback
-  ) => Promise<FastifyMiddlewarePreRequestHookResult>
+    next: Next<any>
+  ) => Promise<FastifyMiddlewareRequestHookResult>
 
 export const createFastifyMiddleware = <ConstructionParams>(
   basePath: string,
   servicesFactory: ServicesFactory<any, ConstructionParams>,
-  preRequestHook?: FastifyMiddlewarePreRequestHook,
+  requestHook?: FastifyMiddlewareRequestHook,
   serializer: ISerializer = JSON,
   reviver?: Reviver
 ): FastifyPluginCallback => {
   const basePathWithNoTrailingSlash = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
-  
+
   return (fastify, options, done) => {
     fastify.route({
       method: 'POST',
@@ -35,25 +37,25 @@ export const createFastifyMiddleware = <ConstructionParams>(
         reply.headers({
           'Content-Type': 'application/json'
         });
-  
+
         const params = request.params as { serviceName: string, methodName: string };
         const serviceName: string = params.serviceName;
         const methodName: string = params.methodName;
 
-        let wrappedPreRequestHook: PreRequestHook | null = null;
-        
-        if (preRequestHook) {
-          wrappedPreRequestHook = async (globalRequestParams: any | null, next: PreRequestHookCallback) => {
-            let fastifyPreRequestHookResult = await preRequestHook(request, globalRequestParams, next);
+        let wrappedRequestHooks: RequestHook<undefined,ConstructionParams>[] = [];
 
-            if (fastifyPreRequestHookResult.headers) {
-              fastifyPreRequestHookResult.headers.forEach((value, key) => {
+        if (requestHook) {
+          wrappedRequestHooks.push(async (globalRequestParams: any | null, next) => {
+            let fastifyHookResult = await requestHook(request, globalRequestParams, next);
+
+            if(fastifyHookResult.headers){
+              fastifyHookResult.headers.forEach((value: any, key: any) => {
                 reply.header(key, value);
               });
             }
 
-            return fastifyPreRequestHookResult;
-          };
+            return fastifyHookResult;
+          });
         }
 
         const result = await httpRequestHandler(
@@ -61,7 +63,7 @@ export const createFastifyMiddleware = <ConstructionParams>(
           serviceName,
           methodName,
           servicesFactory,
-          wrappedPreRequestHook,
+          wrappedRequestHooks,
           serializer,
           reviver
         );

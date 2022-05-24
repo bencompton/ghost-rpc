@@ -15,11 +15,8 @@
   "devDependencies": {
     "typescript": "^4.3.2"
   },
-  "peerDependencies": {
-    "fastify": "3.x"
-  },
   "dependencies": {
     "@types/node": "^15.12.2",
-    "fastify": "^3.22.1"
+    "fastify": "^3.29.0"
   }
 }

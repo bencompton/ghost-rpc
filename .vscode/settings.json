@@ -5,5 +5,12 @@
   "files.exclude": {
     "**/node_modules": true,
     "**/dist": true
-  }
+  },
+  // "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\bash.exe",
+  "terminal.integrated.profiles.windows": {
+    "Bash": {
+      "path": "bash.exe"
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "Bash"
 }
